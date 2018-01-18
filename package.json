@@ -1,0 +1,14 @@
+{
+  "name": "gdpr-token-sale",
+  "version": "0.0.1",
+  "description": "GDPR Cash Token Sale",
+  "main": "contracts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "GDPR Cash",
+  "license": "MIT",
+  "dependencies": {
+    "zeppelin-solidity": "^1.5.0"
+  }
+}
