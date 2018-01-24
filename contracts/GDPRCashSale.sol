@@ -62,7 +62,7 @@ contract GDPRCashSale is Pausable {
         _; 
     }
 
-    modifier afterDeadline(){ 
+    modifier afterDeadline() { 
         require(currentTime() >= endTime); 
         _;
     }

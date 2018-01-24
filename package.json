@@ -10,5 +10,8 @@
   "license": "MIT",
   "dependencies": {
     "zeppelin-solidity": "^1.5.0"
+  },
+  "devDependencies": {
+    "big-integer": "^1.6.26"
   }
 }
