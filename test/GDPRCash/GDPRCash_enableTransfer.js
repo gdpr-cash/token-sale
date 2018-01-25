@@ -4,35 +4,36 @@ var bigInt = require("big-integer");
 var GDPRCash = artifacts.require("./GDPRCash.sol");
 var GDPRCashSale = artifacts.require("./GDPRCashSale.sol");
 
-contract('GDPRCash.enableTransfer', function(accounts) {
+contract('GDPRCash.enableTransfer', function (accounts) {
     // account[0] points to the owner on the testRPC setup
     var owner = accounts[0];
     var user1 = accounts[1];
 
     beforeEach(
-        function() {
+        function () {
             return GDPRCashSale.deployed().then(
-        function(instance) {
-            sale = instance;
-            return GDPRCash.deployed();
-        }).then(
-        function(instance2){
-            token = instance2;
-            return token.INITIAL_SUPPLY();
+                function (instance) {
+                    sale = instance;
+                    return GDPRCash.deployed();
+                }).then(
+                function (instance2) {
+                    token = instance2;
+                    return token.INITIAL_SUPPLY();
+                });
         });
-    });
 
-    it("should not be callable by non-owner", async function() {
+    it("should not be callable by non-owner", async function () {
         try {
-            await token.enableTransfer({from: user2});
+            await token.enableTransfer({ from: user2 });
         }
         catch (e) {
+            console.log(e);
             return true;
         }
         throw new Error("non-owner was able to call enableTransfer");
     });
 
-    it("should enable transfers and clear allowances", async function() {
+    it("should enable transfers and clear allowances", async function () {
         await token.setCrowdsale(sale.address, 0);
         await token.enableTransfer();
         let transferEnabled = await token.transferEnabled();
@@ -53,6 +54,4 @@ contract('GDPRCash.enableTransfer', function(accounts) {
         adminAllowance = (await token.allowance(owner, adminAddr)).toNumber();
         assert.equal(adminAllowance, 0);
     });
-
-
 });
