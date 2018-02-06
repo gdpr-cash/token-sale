@@ -35,7 +35,7 @@ contract('GDPRCash.transferFrom', function (accounts) {
         al = await token.allowance(owner, user3);
         console.log(al.toNumber());
         try {
-            await token.transferFrom(owner, user3, 1, {from: user2});
+            let result = await token.transferFrom(owner, user3, 1, {from: user2});
         }
         catch (e) {
             return true;

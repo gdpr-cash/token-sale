@@ -63,7 +63,12 @@ contract('GDPRCash (Basic Tests)', function(accounts) {
   });
 
   it("should allow the deployer (owner) of the token to make transfers", async function() {
-      await token.transfer(sale.address, 1);
+      try {
+        await token.transfer(sale.address, 1);
+      } catch (e) {
+          console.log(e);
+      }
+      
       let ownerBalance = await token.balanceOf(owner);
       let saleBalance = await token.balanceOf(sale.address);
       let initialSupply = await token.INITIAL_SUPPLY();
@@ -73,7 +78,6 @@ contract('GDPRCash (Basic Tests)', function(accounts) {
       initialSupply = initialSupply.toNumber();
       totalSupply = totalSupply.toNumber();
       console.log(ownerBalance, saleBalance, initialSupply, totalSupply);
-      return true;
       assert.equal(ownerBalance, bigInt("14e25"), "the owner should now have 30% of the original funds");
       assert.equal(saleBalance, bigInt("6e24"), "the crowdSale should now have 70% of the original funds");
       assert.equal(totalSupply, initialSupply, "the total supply should equal the initial supply");

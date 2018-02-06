@@ -24,10 +24,9 @@ contract('GDPRCash.enableTransfer', function (accounts) {
 
     it("should not be callable by non-owner", async function () {
         try {
-            await token.enableTransfer({ from: user2 });
+            await token.enableTransfer({ from: user1 });
         }
         catch (e) {
-            console.log(e);
             return true;
         }
         throw new Error("non-owner was able to call enableTransfer");

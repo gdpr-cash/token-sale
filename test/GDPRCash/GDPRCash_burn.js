@@ -35,10 +35,8 @@ contract('GDPRCash.burn', function (accounts) {
             await token.burn(10, {from: burner});
             burnerBalance = await token.balanceOf(burner);
             console.log("Balance after: ", burnerBalance.toString(10));
-            //await token.burn(1);
         }
         catch (e) {
-            console.log(e);
             return true;
         }
         throw new Error("burn was called when transfers were not enabled");

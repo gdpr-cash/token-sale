@@ -24,7 +24,7 @@ contract('GDPRCash.setCrowdsale', function (accounts) {
 
     it("should not be callable by non-owner", async function () {
         try {
-            await token.setCrowdsale(sale.address, { from: user2 });
+            await token.setCrowdsale(sale.address, 0, { from: user1 });
         }
         catch (e) {
             return true;

@@ -153,7 +153,7 @@ contract GDPRCash is StandardToken, BurnableToken, Ownable {
      * @param _value    The amount of tokens to burn in mini-GDPR
      */
     function burn(uint256 _value) public {
-        require(transferEnabled || msg.sender == owner);
+        require(transferEnabled);
         super.burn(_value);
         Transfer(msg.sender, address(0x0), _value);
     }
