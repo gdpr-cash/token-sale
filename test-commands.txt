@@ -1,0 +1,6 @@
+GDPRCash.deployed().then(inst => token = inst)
+GDPRCashSale.deployed().then(inst2 => sale = inst2)
+owner = web3.eth.accounts[0]
+admin = web3.eth.accounts[1]
+user2 = web3.eth.accounts[2]
+user3 = web3.eth.accounts[3]
