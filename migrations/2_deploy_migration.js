@@ -31,7 +31,9 @@ module.exports = function(deployer, network, accounts) {
     deployer.link(GDPRCash, BurnableToken);
     deployer.link(GDPRCash, SafeMath);
 
-    var time = new Date().getTime() / 1000;
+    var time = Math.floor(new Date().getTime() / 1000);
+    //var time = web3.eth.getBlock(web3.eth.blockNumber).timestamp + 120;
+    console.log("TIME = ", time);
 
     deployer.deploy(GDPRCash, accounts[1]).then(function() {
         const fundingGoal = 10;

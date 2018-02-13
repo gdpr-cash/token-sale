@@ -1,4 +1,4 @@
-// Quantstamp Technologies Inc. (info@quantstamp.com)
+// GDPR Cash
 
 pragma solidity ^0.4.17;
 
@@ -8,7 +8,7 @@ import './ownership/Ownable.sol';
 import './math/SafeMath.sol';
 
 /**
- * The Quantstamp token (GDPR) has a fixed supply and restricts the ability
+ * The GDPR Cash (GDPR) has a fixed supply and restricts the ability
  * to transfer tokens until the owner has called the enableTransfer()
  * function.
  *

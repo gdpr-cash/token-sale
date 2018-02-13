@@ -12,6 +12,7 @@
     "zeppelin-solidity": "^1.5.0"
   },
   "devDependencies": {
-    "big-integer": "^1.6.26"
+    "big-integer": "^1.6.26",
+    "truffle-hdwallet-provider": "0.0.3"
   }
 }
