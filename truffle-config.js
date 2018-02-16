@@ -10,10 +10,10 @@ const {
 } = require('./package.json')
 
 const DEFAULT = {
-  host: '127.0.0.1',
+  host: 'localhost',
   port: 8545,
   network_id: '*', // Match any network id
-  gas: 4600000
+  gas: 4700000
 }
 
 const walletPath = './wallet.json'
@@ -44,6 +44,7 @@ module.exports = {
   networks: {
     geth: { ...DEFAULT, gas: 999999 },
     ganache: { ...DEFAULT, port: 7545, gas: 4700000 },
+    development: { ...DEFAULT },
     ropsten: {
       network_id: 3,
       provider: engineRopsten,
@@ -52,11 +53,11 @@ module.exports = {
       gasPrice: 22200000000
     },
     rinkeby: {
-        network_id: 3,
-        provider: engineRinkeby,
-        from: addresses[0],
-        gas: 4700000,
-        gasPrice: 22200000000
+      network_id: 3,
+      provider: engineRinkeby,
+      from: addresses[0],
+      gas: 4700000,
+      gasPrice: 22200000000
     },
     mainnet: {
       network_id: 1,
@@ -66,10 +67,10 @@ module.exports = {
       gasPrice: 7500000000
     }
   },
-  /*solc: {
+  solc: {
     optimizer: {
       enabled: true,
       runs: 200
     }
-  }*/
+  }
 }

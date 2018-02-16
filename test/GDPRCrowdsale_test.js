@@ -13,7 +13,7 @@ contract('GDPRCrowdsale', accounts => {
   const start = now
   const end = start + 1296000 // 15 days after start
 
-  const SIGNIFICANT_AMOUNT = 2048
+  const SIGNIFICANT_AMOUNT = 1024
 
   const [
     buyer,
@@ -31,7 +31,7 @@ contract('GDPRCrowdsale', accounts => {
 
   context("Crowdsale whose goal hasn't been reached", () => {
     const hugeGoal = 950000000000000000000000000
-    const sendAmount = web3.toWei(3, 'ether')
+    const sendAmount = web3.toWei(1, 'ether')
 
     before(async () => {
       crowdsaleContract = await GDPRCrowdsale.new(start, end, hugeGoal)
@@ -87,17 +87,16 @@ contract('GDPRCrowdsale', accounts => {
 
       const vaultAddress = await crowdsaleContract.vault.call()
       vaultContract = await RefundVault.at(vaultAddress)
-    })
+    }) *
+      it('deploys and instantiates all derived contracts', async () => {
+        assert.isNotNull(crowdsaleContract)
+        assert.isNotNull(tokenContract)
+        assert.isNotNull(vaultContract)
 
-    it('deploys and instantiates all derived contracts', async () => {
-      assert.isNotNull(crowdsaleContract)
-      assert.isNotNull(tokenContract)
-      assert.isNotNull(vaultContract)
-
-      // check token contract owner is the crowdsale contract
-      const owner = await tokenContract.owner.call()
-      assert.equal(owner, crowdsaleContract.address)
-    })
+        // check token contract owner is the crowdsale contract
+        const owner = await tokenContract.owner.call()
+        assert.equal(owner, crowdsaleContract.address)
+      })
 
     it('distributed the initial token amounts correctly', async () => {
       // Get allocation wallet addresses
@@ -109,28 +108,24 @@ contract('GDPRCrowdsale', accounts => {
       // Get expected token amounts from contract config
       const expectedExpertsTokens = await crowdsaleContract.EXPERTS_POOL_TOKENS.call()
       const expectedCommunityTokens = await crowdsaleContract.COMMUNITY_POOL_TOKENS.call()
-      const expectedTeamTokens = await crowdsaleContract.TEAM_TOKENS.call()
+      const expectedTeamTokens = await crowdsaleContract.TEAM_POOL_TOKENS.call()
       const expectedLegalTokens = await crowdsaleContract.LEGAL_EXPENSES_TOKENS.call()
 
       // Get actual balances
       const expertsBalance = await tokenContract.balanceOf.call(expertsPool)
       const communityBalance = await tokenContract.balanceOf.call(communityPool)
       const teamBalance = await tokenContract.balanceOf.call(teamPool)
-      const legalBalance = await tokenContract.balanceOf.call(legalExpensesAddress) 
+      const legalBalance = await tokenContract.balanceOf.call(
+        legalExpensesAddress
+      )
 
       // Check allocation was done as expected
-      assert.equal(
-        expertsBalance.toNumber(),
-        expectedExpertsTokens.toNumber()
-      )
+      assert.equal(expertsBalance.toNumber(), expectedExpertsTokens.toNumber())
       assert.equal(
         communityBalance.toNumber(),
         expectedCommunityTokens.toNumber()
       )
-      assert.equal(
-        teamBalance.toNumber(),
-        expectedTeamTokens.toNumber()
-      )
+      assert.equal(teamBalance.toNumber(), expectedTeamTokens.toNumber())
       assert.equal(legalBalance.toNumber(), expectedLegalTokens.toNumber())
     })
 
@@ -232,7 +227,7 @@ contract('GDPRCrowdsale', accounts => {
       const maxTokenCap = await crowdsaleContract.PURCHASER_MAX_TOKEN_CAP.call()
       const rate = await crowdsaleContract.rate.call()
       const maxWei = maxTokenCap.toNumber() / rate.toNumber()
-      let sendAmount = maxWei + SIGNIFICANT_AMOUNT
+      let sendAmount = maxWei + SIGNIFICANT_AMOUNT * 10
 
       // check transaction fails because purchase is above cap
       await assertThrows(
@@ -240,7 +235,7 @@ contract('GDPRCrowdsale', accounts => {
       )
 
       // check participant can still purchase slightly above the max cap
-      sendAmount = maxWei - SIGNIFICANT_AMOUNT
+      sendAmount = maxWei - SIGNIFICANT_AMOUNT * 10
       const balance1 = await tokenContract.balanceOf(sender)
       crowdsaleContract.sendTransaction({ from: sender, value: sendAmount })
       const balance2 = await tokenContract.balanceOf(sender)

@@ -1,3 +1,5 @@
+https://selfkey.org/instructions/ 
+
 # SelfKey contract main structure
 
 ## Contracts

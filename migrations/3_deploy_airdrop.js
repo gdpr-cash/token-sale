@@ -1,8 +1,8 @@
-const SelfKeyAirdrop = artifacts.require('./SelfKeyAirdrop.sol')
+const GDPRAirdrop = artifacts.require('./GDPRAirdrop.sol')
 
 module.exports = deployer => {
   const crowdsaleAddress = ''
   const tokenAddress = ''
 
-  deployer.deploy(SelfKeyAirdrop, crowdsaleAddress, tokenAddress)
+  deployer.deploy(GDPRAirdrop, crowdsaleAddress, tokenAddress)
 }

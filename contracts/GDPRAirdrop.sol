@@ -1,7 +1,7 @@
 pragma solidity ^0.4.19;
 
-import './SelfKeyToken.sol';
-import './SelfKeyCrowdsale.sol';
+import './GDPRCash.sol';
+import './GDPRCrowdsale.sol';
 
 import 'zeppelin-solidity/contracts/token/ERC20/SafeERC20.sol';
 import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
@@ -11,8 +11,8 @@ import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
  * @title SelfKeyAirdrop
  * @dev SelfKey SelfKey promotional airdropping mechanism
  */
-contract SelfKeyAirdrop is Ownable {
-    using SafeERC20 for SelfKeyToken;
+contract GDPRAirdrop is Ownable {
+    using SafeERC20 for GDPRCash;
 
     mapping(address => bool) public airdropped;
     mapping(address => bool) public isAirdropper;
@@ -20,8 +20,8 @@ contract SelfKeyAirdrop is Ownable {
     uint256 public airdropAmount = 10000000000000000000;
     uint256 public airdropCount = 0;
 
-    SelfKeyCrowdsale public crowdsale;
-    SelfKeyToken public token;
+    GDPRCrowdsale public crowdsale;
+    GDPRCash public token;
 
     /**
      * @dev restricts a method to be only callable by addresses whitelisted as "airdroppers"
@@ -35,9 +35,9 @@ contract SelfKeyAirdrop is Ownable {
      * @dev SelfKeyAirdrop contract constructor
      * @param crowdsaleAddress - address of the SelfKey crowdsale contract
      */
-    function SelfKeyAirdrop (address crowdsaleAddress, address tokenAddress) public {
-        crowdsale = SelfKeyCrowdsale(crowdsaleAddress);
-        token = SelfKeyToken(tokenAddress);
+    function GDPRAirdrop (address crowdsaleAddress, address tokenAddress) public {
+        crowdsale = GDPRCrowdsale(crowdsaleAddress);
+        token = GDPRCash(tokenAddress);
     }
 
     /**
@@ -80,7 +80,6 @@ contract SelfKeyAirdrop is Ownable {
      * @param _to - address to whom the airdrop is being done
      */
     function airdrop (address _to) public airdropperOnly {
-        require(crowdsale.kycVerified(_to));
         require(!airdropped[_to]);
 
         airdropCount = airdropCount + 1;

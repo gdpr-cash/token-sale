@@ -1,6 +1,6 @@
-const SelfKeyCrowdsale = artifacts.require('./SelfKeyCrowdsale.sol')
-const SelfKeyToken = artifacts.require('./SelfKeyToken.sol')
-const SelfKeyAirdrop = artifacts.require('./SelfKeyAirdrop.sol')
+const GDPRCrowdsale = artifacts.require('./GDPRCrowdsale.sol')
+const GDPRCash = artifacts.require('./GDPRCash.sol')
+const GDPRAirdrop = artifacts.require('./GDPRAirdrop.sol')
 
 const assertThrows = require('./utils/assertThrows')
 
@@ -26,10 +26,10 @@ contract('Airdrop contract', accounts => {
 
   before(async () => {
     // deploy crowdsale contract
-    crowdsaleContract = await SelfKeyCrowdsale.new(start, end, goal)
+    crowdsaleContract = await GDPRCrowdsale.new(start, end, goal)
 
     const tokenAddress = await crowdsaleContract.token.call()
-    tokenContract = await SelfKeyToken.at(tokenAddress)
+    tokenContract = await GDPRCash.at(tokenAddress)
 
     // run small crowdsale
     // verify buyer and let it make a purchase
@@ -51,7 +51,7 @@ contract('Airdrop contract', accounts => {
     assert.isTrue(finalized)
 
     // deploy airdrop contract
-    airdropContract = await SelfKeyAirdrop.new(
+    airdropContract = await GDPRAirdrop.new(
       crowdsaleContract.address,
       tokenContract.address
     )
