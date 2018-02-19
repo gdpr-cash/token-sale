@@ -1,6 +1,6 @@
-GDPRCash.deployed().then(inst => token = inst)
-GDPRCashSale.deployed().then(inst2 => sale = inst2)
-owner = web3.eth.accounts[0]
-admin = web3.eth.accounts[1]
-user2 = web3.eth.accounts[2]
-user3 = web3.eth.accounts[3]
+GDPRCrowdsale.deployed().then(inst => sale = inst)
+sale.token().then(inst2 => token = GDPRCash.at(inst2))
+owner = "0xb82B7c3B41992d34FC09facAA5488777d936A88e"
+galin = "0x376BDE10F09043b2e30CA147A2C104c6D4750bA2"
+joro = "0x07338b4038eEcBBFA2B4974E801A39c498D1A13D"
+

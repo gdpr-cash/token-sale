@@ -1,76 +1,74 @@
-const hdWallet = require('./hdWallet')
-const web3Engine = require('./web3Engine')
+const HDWallet = require('./hd-wallet')
+const HDWalletProvider = require("truffle-hdwallet-provider")
 
 const {
   name: packageName,
-  version,
-  description,
-  keywords,
-  license
+    version,
+    description,
+    keywords,
+    license
 } = require('./package.json')
 
 const DEFAULT = {
-  host: 'localhost',
-  port: 8545,
-  network_id: '*', // Match any network id
-  gas: 4700000
+    host: 'localhost',
+    port: 8545,
+    network_id: '*', // Match any network id
+    gas: 4700000
 }
 
 const walletPath = './wallet.json'
-
-const providerUrlRopsten = 'https://ropsten.infura.io/xRc0gm6NfEiUU2bRb2r4'
-const providerUrlRinkeby = 'https://rinkeby.infura.io/xRc0gm6NfEiUU2bRb2r4'
-const providerUrlMainnet = 'https://mainnet.infura.io/xRc0gm6NfEiUU2bRb2r4'
-
-const wallets = hdWallet(walletPath)
-
-const getAddress = wallet => `0x${wallet.getAddress().toString('hex')}`
-const addresses = wallets.map(getAddress)
-
-const engineRopsten = web3Engine(wallets, providerUrlRopsten)
-const engineRinkeby = web3Engine(wallets, providerUrlRinkeby)
-const engineMainnet = web3Engine(wallets, providerUrlMainnet)
+const wallet = HDWallet(walletPath)
 
 module.exports = {
-  packageName,
-  version,
-  description,
-  keywords,
-  license,
-  authors: [
-    'Carlos Bruguera <cbruguera@gmail.com>',
-    'Dave Sag <david.sag@industrie.co>'
-  ],
-  networks: {
-    geth: { ...DEFAULT, gas: 999999 },
-    ganache: { ...DEFAULT, port: 7545, gas: 4700000 },
-    development: { ...DEFAULT },
-    ropsten: {
-      network_id: 3,
-      provider: engineRopsten,
-      from: addresses[0],
-      gas: 4700000,
-      gasPrice: 22200000000
+    packageName,
+    version,
+    description,
+    keywords,
+    license,
+    authors: [
+        'Choko Bokov <choko@bokov.com>'
+    ],
+    networks: {
+        geth: { ...DEFAULT, gas: 999999 },
+        ganache: { ...DEFAULT, port: 7545, gas: 4700000 },
+        development: { ...DEFAULT },
+        ropsten: {
+            network_id: 3,
+            provider: function () {
+                return new HDWalletProvider(wallet.mnemonic, "https://ropsten.infura.io/" + wallet.infuraToken)
+            },
+            gas: 4700000,
+            gasPrice: 22200000000
+        },
+        rinkeby: {
+            network_id: 3,
+            provider: function () {
+                return new HDWalletProvider(wallet.mnemonic, "https://rinkeby.infura.io/" + wallet.infuraToken)
+            },
+            gas: 4700000,
+            gasPrice: 22200000000
+        },
+        mainnet: {
+            network_id: 1,
+            provider: function () {
+                return new HDWalletProvider(wallet.mnemonic, "https://mainnet.infura.io/" + wallet.infuraToken)
+            },
+            gas: 5000000,
+            gasPrice: 7500000000
+        },
+        coverage: {
+            host: "localhost",
+            network_id: "*",
+            port: 8555,         // <-- If you change this, also set the port option in .solcover.js.
+            gas: 0xfffffffffff, // <-- Use this high gas value
+            gasPrice: 0x01      // <-- Use this low gas price
+          },
+      
     },
-    rinkeby: {
-      network_id: 3,
-      provider: engineRinkeby,
-      from: addresses[0],
-      gas: 4700000,
-      gasPrice: 22200000000
-    },
-    mainnet: {
-      network_id: 1,
-      provider: engineMainnet,
-      from: addresses[0],
-      gas: 5000000,
-      gasPrice: 7500000000
+    solc: {
+        optimizer: {
+            enabled: true,
+            runs: 200
+        }
     }
-  },
-  solc: {
-    optimizer: {
-      enabled: true,
-      runs: 200
-    }
-  }
 }

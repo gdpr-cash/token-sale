@@ -1,3 +1,5 @@
 module.exports = {
-  copyNodeModules: true
+    port: 6545,
+    norpc: true,
+    copyNodeModules: true
 }

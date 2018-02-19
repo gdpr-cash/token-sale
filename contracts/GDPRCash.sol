@@ -1,22 +1,17 @@
 pragma solidity ^0.4.19;
 
-import 'zeppelin-solidity/contracts/token/ERC20/MintableToken.sol';
-import './GDPRCrowdsale.sol';
+import 'zeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol';
+import 'zeppelin-solidity/contracts/token/ERC20/CappedToken.sol';
+import 'zeppelin-solidity/contracts/token/ERC20/BurnableToken.sol';
 
 
 /**
  * @title SelfKeyToken
  * @dev SelfKey Token implementation.
  */
-contract GDPRCash is MintableToken {
-    string public constant name = "GDPR Cash";
-    string public constant symbol = "GDPR"; 
-    uint256 public constant decimals = 18;
+contract GDPRCash is DetailedERC20, CappedToken, BurnableToken {
 
-    uint256 public cap;
     bool private transfersEnabled = false;
-
-    event Burned(address indexed burner, uint256 value);
 
     /**
      * @dev Only the contract owner can transfer without restrictions.
@@ -33,18 +28,9 @@ contract GDPRCash is MintableToken {
      * @dev Constructor that sets a maximum supply cap.
      * @param _cap — The maximum supply cap.
      */
-    function GDPRCash(uint256 _cap) public {
-        cap = _cap;
-    }
-
-    /**
-     * @dev Overrides MintableToken.mint() for restricting supply under cap
-     * @param _to — The address to receive minted tokens
-     * @param _value — The number of tokens to mint
-     */
-    function mint(address _to, uint256 _value) public onlyOwner canMint returns (bool) {
-        require(totalSupply_.add(_value) <= cap);
-        return super.mint(_to, _value);
+    function GDPRCash(uint256 _cap) public 
+                DetailedERC20('Character1', 'CHR1', 18)  
+                CappedToken(_cap) {
     }
 
     /**
@@ -76,18 +62,5 @@ contract GDPRCash is MintableToken {
      */
     function enableTransfers() public onlyOwner {
         transfersEnabled = true;
-    }
-
-    /**
-    * @dev Burns a specific number of tokens.
-    * @param _value — The number of tokens to be burned.
-    */
-    function burn(uint256 _value) public onlyOwner {
-        require(_value > 0);
-
-        address burner = msg.sender;
-        balances[burner] = balances[burner].sub(_value);
-        totalSupply_ = totalSupply_.sub(_value);
-        Burned(burner, _value);
     }
 }

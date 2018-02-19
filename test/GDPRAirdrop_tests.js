@@ -33,14 +33,7 @@ contract('Airdrop contract', accounts => {
 
     // run small crowdsale
     // verify buyer and let it make a purchase
-    let sendAmount = web3.toWei(2, 'ether')
-    await crowdsaleContract.verifyKYC(buyer)
-    await crowdsaleContract.verifyKYC(buyer2)
-    const isVerified = await crowdsaleContract.kycVerified.call(buyer)
-    const isVerified2 = await crowdsaleContract.kycVerified.call(buyer2)
-
-    assert.isTrue(isVerified)
-    assert.isTrue(isVerified2)
+    let sendAmount = web3.toWei(1, 'ether')
 
     await crowdsaleContract.sendTransaction({ from: buyer, value: sendAmount })
     await crowdsaleContract.sendTransaction({ from: buyer2, value: sendAmount })
@@ -131,9 +124,6 @@ contract('Airdrop contract', accounts => {
     assert.isTrue(airdropped)
     await assertThrows(airdropContract.airdrop(buyer, { from: airdropper }))
   })
-
-  it('does not allow airdropping to a non-verified address', async () =>
-    assertThrows(airdropContract.airdrop(notVerified, { from: airdropper })))
 
   it('does not allow airdropping by a non-whitelisted address', async () =>
     assertThrows(airdropContract.airdrop(buyer2, { from: buyer })))

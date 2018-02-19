@@ -1,2 +1,0 @@
-account9 = web3.eth.accounts[9]
-

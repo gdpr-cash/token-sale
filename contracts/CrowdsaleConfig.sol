@@ -1,6 +1,5 @@
 pragma solidity ^0.4.19;
 
-
 /**
  * @title CrowdsaleConfig
  * @dev Holds all constants for SelfKeyCrowdsale contract
@@ -49,17 +48,12 @@ contract CrowdsaleConfig {
     uint256 public constant TOKEN_PRICE_THOUSANDTH = 186;  // $0.186 per GDPR
 
     // Contract wallet addresses for initial allocation
-    /*address public constant CROWDSALE_WALLET_ADDR = 0x627306090abaB3A6e1400e9345bC60c78a8BEf57;
-    address public constant EXPERTS_POOL_ADDR = 0xf17f52151EbEF6C7334FAD080c5704D77216b732;
-    address public constant COMMUNITY_POOL_ADDR = 0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef;
-    address public constant TEAM_POOL_ADDR = 0x821aEa9a577a9b44299B9c15c88cf3087F3b5544;
-    address public constant LEGAL_EXPENSES_ADDR = 0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2;*/
-    address public constant CROWDSALE_WALLET_ADDR = 0xE0831b1687c9faD3447a517F9371E66672505dB0;
-    address public constant EXPERTS_POOL_ADDR = 0xD68947892Ef4D94Cdef7165b109Cf6Cd3f58A8e8;
-    address public constant COMMUNITY_POOL_ADDR = 0xd0C24Bb82e71A44eA770e84A3c79979F9233308D;
-    address public constant TEAM_POOL_ADDR = 0x0506c5485AE54aB14C598Ef16C459409E5d8Fc03;
-    address public constant LEGAL_EXPENSES_ADDR = 0x4452d6454e777743a5Ee233fbe873055008fF528;
-
+    address public constant CROWDSALE_WALLET_ADDR = 0xc8e922d283bf770a3F33C15b7f8faD117b72A5a6;
+    address public constant EXPERTS_POOL_ADDR = 0x1a1Cfa223FF0FF7E9373E6e0914FBfb0F9d7E482;
+    address public constant COMMUNITY_POOL_ADDR = 0xf0BEd08A7971D7353BE18b45FfCF1D5D7900eef1;
+    address public constant TEAM_POOL_ADDR = 0xFC3897d37Fae4Eb3aa6041b3616ecB99206F445C;
+    address public constant LEGAL_EXPENSES_ADDR = 0xd99CF78420D5e0e36a9C30E3C1910d983307ad8D;
+    
     // 6 months period, in seconds, for pre-commitment half-vesting
     //uint64 public constant PRECOMMITMENT_VESTING_SECONDS = 15552000;
 }

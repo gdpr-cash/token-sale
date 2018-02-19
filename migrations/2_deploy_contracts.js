@@ -1,9 +1,10 @@
 const GDPRCrowdsale = artifacts.require('./GDPRCrowdsale.sol')
 
 module.exports = deployer => {
-  const startTime = 1518711240 // 15 Feb 2018 16:14:00 EET
-  const endTime = 1527206400 // 25 May 2018 00:00:00 UTC
-  const goal = 1000000000000000000000000 // approx. $200,000 in GDPR
+  const startTime = 1518998400 // 15 Feb 2018 16:14:00 EET
+  const endTime = 1519171200 // 25 May 2018 00:00:00 UTC
+  //const goal = 1000000000000000000000000 // approx. $200,000 in GDPR
+  const goal = 10000000000000000000000 // 2 ether
 
   var sale
   var token
