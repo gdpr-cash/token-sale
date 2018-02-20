@@ -1,6 +1,22 @@
-GDPRCrowdsale.deployed().then(inst => sale = inst)
-sale.token().then(inst2 => token = GDPRCash.at(inst2))
-owner = "0xb82B7c3B41992d34FC09facAA5488777d936A88e"
-galin = "0x376BDE10F09043b2e30CA147A2C104c6D4750bA2"
-joro = "0x07338b4038eEcBBFA2B4974E801A39c498D1A13D"
+GdprCash.deployed().then(inst => token = inst)
+GdprCrowdsale.deployed().then(inst2 => sale = inst2)
+owner = web3.eth.accounts[0]
+user2 = web3.eth.accounts[2]
+user3 = web3.eth.accounts[3]
 
+web3.eth.sendTransaction({from: user3, to: sale.address, value: web3.toWei(1, 'ether'), gas: 200000})
+sale.finalize()
+
+token.transfer(user3, 50, {from: owner})
+token.transfer(user2, 10, {from: user3})
+
+token.balanceOf(user3).then(v => v.toString(10))
+
+sale.endTime().then(t => endTime = new Date(t.toNumber()*1000))
+
+token.approve(user3, 1000)
+token.transferFrom(owner, user2, 50, {from: user3})
+
+web3.eth.getBalance(sale.address).toString(10)
+wallet = "0x2932b7A2355D6fecc4b5c0B6BD44cC31df247a2e"
+web3.eth.getBalance(wallet).toString(10)
