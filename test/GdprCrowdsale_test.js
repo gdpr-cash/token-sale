@@ -120,6 +120,29 @@ contract('GdprCrowdsale', accounts => {
             )
         })
 
+        it('does not allow purchases when paused', async () => {
+            const sender = buyer3
+
+            await saleContract.pause();
+
+            const sendAmount = web3.toWei(1, 'ether')
+            await assertThrows(
+                saleContract.sendTransaction({
+                    from: sender,
+                    value: sendAmount,
+                    gas: 200000
+                })
+            )
+
+            await saleContract.unpause();
+
+            saleContract.sendTransaction({
+                from: sender,
+                value: sendAmount,
+                gas: 200000
+            })
+        })
+
         it('does not allow contributions below minimum cap per purchaser', async () => {
             const sender = buyer4
 

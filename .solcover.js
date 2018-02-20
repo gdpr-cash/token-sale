@@ -1,4 +1,4 @@
 module.exports = {
-    norpc: true,
+    norpc: false,
     copyNodeModules: true
 }

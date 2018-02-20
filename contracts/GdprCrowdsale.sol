@@ -9,39 +9,40 @@ import 'zeppelin-solidity/contracts/lifecycle/Pausable.sol';
 
 
 /**
- * @title SelfKeyCrowdsale
- * @dev SelfKey Token Crowdsale implementation.
+ * @title GDPR Crowdsale
+ * @dev GDPR Cash crowdsale contract. 
  */
-// solhint-disable-next-line max-states-count
 contract GdprCrowdsale is Pausable, GdprConfig {
     using SafeMath for uint256;
 
     // Token contract
     GdprCash public token;
 
-    // start and end timestamps where investments are allowed (both inclusive)
+    // Start and end timestamps where investments are allowed (both inclusive)
     uint256 public startTime;
     uint256 public endTime;
 
-    // address where funds are collected
+    // Address where funds are collected
     address public wallet;
 
-    // how many token units a buyer gets per wei
+    // How many token units a buyer gets per wei
     uint256 public rate;
 
-    // amount of raised money in wei
+    // Amount of raised money in wei
     uint256 public weiRaised = 0;
 
     // Total amount of tokens purchased
     uint256 public totalPurchased = 0;
 
+    // Purchases
     mapping(address => uint256) public tokensPurchased;
 
+    // Whether the crowdsale is finalized
     bool public isFinalized = false;
 
     // Crowdsale events
     /**
-     * event for token purchase logging
+     * Event for token purchase logging
      * @param purchaser who paid for the tokens
      * @param beneficiary who got the tokens
      * @param value weis paid for purchase
@@ -53,17 +54,28 @@ contract GdprCrowdsale is Pausable, GdprConfig {
         uint256 value, 
         uint256 amount);
 
+    /**
+     * Event invoked when the rate is changed
+     * @param newRate The new rate GDPR / ETH
+     */
     event RateChange(uint256 newRate);
 
+    /**
+     * Triggered when ether is withdrawn to the sale wallet
+     * @param amount How many funds to withdraw in wei
+     */
     event FundWithdrawal(uint256 amount);
 
+    /**
+     * Event for crowdsale finalization
+     */
     event Finalized();
 
     /**
      * @dev GdprCrowdsale contract constructor
-     * @param _startTime — Unix timestamp representing the crowdsale start time
-     * @param _endTime — Unix timestamp representing the crowdsale start time
-     * @param _tokenAddress — Minimum amount of tokens expected to sell.
+     * @param _startTime uint256 Unix timestamp representing the crowdsale start time
+     * @param _endTime uint256 Unix timestamp representing the crowdsale end time
+     * @param _tokenAddress address Address of the GDPR Cash token contract
      */
     function GdprCrowdsale(
         uint256 _startTime,
@@ -74,9 +86,6 @@ contract GdprCrowdsale is Pausable, GdprConfig {
         require(_endTime > _startTime);
         require(_tokenAddress != address(0));
 
-        // sets contract owner as a verifier
-        //isVerifier[msg.sender] = true;
-
         startTime = _startTime;
         endTime = _endTime;
         token = GdprCash(_tokenAddress);
@@ -86,15 +95,16 @@ contract GdprCrowdsale is Pausable, GdprConfig {
 
     /**
      * @dev Fallback function is used to buy tokens.
-     *      It's the only entry point since `buyTokens` is internal
+     * It's the only entry point since `buyTokens` is internal.
+     * When paused funds are not accepted.
      */
-    function () whenNotPaused public payable {
+    function () public whenNotPaused payable {
         buyTokens(msg.sender, msg.value);
     }
 
     /**
-     * @dev Sets a new start date as long as token hasn't started yet
-     * @param _startTime - unix timestamp of the new start time
+     * @dev Sets a new start date as long as token sale hasn't started yet
+     * @param _startTime uint256 Unix timestamp of the new start time
      */
     function setStartTime (uint256 _startTime) public onlyOwner {
         require(now < startTime);
@@ -106,7 +116,7 @@ contract GdprCrowdsale is Pausable, GdprConfig {
 
     /**
      * @dev Sets a new end date as long as end date hasn't been reached
-     * @param _endTime - unix timestamp of the new end time
+     * @param _endTime uint2t56 Unix timestamp of the new end time
      */
     function setEndTime (uint256 _endTime) public onlyOwner {
         require(now < endTime);
@@ -117,8 +127,8 @@ contract GdprCrowdsale is Pausable, GdprConfig {
     }
 
     /**
-     * @dev Updates the ETH/USD conversion rate as long as the public sale hasn't started
-     * @param _rate - Updated conversion rate
+     * @dev Updates the GDPR/ETH conversion rate
+     * @param _rate uint256 Updated conversion rate
      */
     function setRate(uint256 _rate) public onlyOwner {
         require(_rate > 0);
@@ -128,7 +138,7 @@ contract GdprCrowdsale is Pausable, GdprConfig {
 
     /**
      * @dev Must be called after crowdsale ends, to do some extra finalization
-     *      work. Calls the contract's finalization function.
+     * work. Calls the contract's finalization function.
      */
     function finalize() public onlyOwner {
         require(now > startTime);
@@ -140,15 +150,23 @@ contract GdprCrowdsale is Pausable, GdprConfig {
         isFinalized = true;
     }
 
-    // @return true if crowdsale event has ended
+    /**
+     * @dev Anyone can check if the crowdsale is over
+     * @return true if crowdsale has endeds
+     */
     function hasEnded() public view returns (bool) {
         return now > endTime;
     }
 
-    function withdraw(uint256 amount) public onlyOwner {
+    /**
+     * @dev Transfers ether to the sale wallet
+     * @param _amount uint256 The amount to withdraw. 
+     * If 0 supplied transfers the entire balance.
+     */
+    function withdraw(uint256 _amount) public onlyOwner {
         require(this.balance > 0);
-        require(amount <= this.balance);
-        uint256 balanceToSend = amount;
+        require(_amount <= this.balance);
+        uint256 balanceToSend = _amount;
         if (balanceToSend == 0) {
             balanceToSend = this.balance; 
         }
@@ -157,48 +175,49 @@ contract GdprCrowdsale is Pausable, GdprConfig {
     }
 
     /**
-     *  @dev Low level token purchase. Only callable internally. Participants MUST be KYC-verified before purchase
-     *  @param participant — The address of the token purchaser
-     *  @param weiAmount — The address of the token purchaser
+     *  @dev Token purchase logic. Used internally.
+     *  @param _participant address The address of the token purchaser
+     *  @param _weiAmount uin256 The amount of ether in wei sent to the contract
      */
-    function buyTokens(address participant, uint256 weiAmount) internal {
-        require(participant != address(0));
+    function buyTokens(address _participant, uint256 _weiAmount) internal {
+        require(_participant != address(0));
         require(now >= startTime);
         require(now < endTime);
         require(!isFinalized);
-        require(weiAmount != 0);
+        require(_weiAmount != 0);
 
         // Calculate the token amount to be allocated
-        uint256 tokens = weiAmount.mul(rate);
+        uint256 tokens = _weiAmount.mul(rate);
 
         // Update state
-        tokensPurchased[participant] = tokensPurchased[participant].add(tokens);
+        tokensPurchased[_participant] = tokensPurchased[_participant].add(tokens);
         totalPurchased = totalPurchased.add(tokens);
         // update state
-        weiRaised = weiRaised.add(weiAmount);
+        weiRaised = weiRaised.add(_weiAmount);
 
         require(totalPurchased <= SALE_CAP);
-        require(tokensPurchased[participant] >= PURCHASER_MIN_TOKEN_CAP);
+        require(tokensPurchased[_participant] >= PURCHASER_MIN_TOKEN_CAP);
 
         if (now < startTime + 86400) {
             // if still during the first day of token sale, apply different max cap
-            require(tokensPurchased[participant] <= PURCHASER_MAX_TOKEN_CAP_DAY1);
+            require(tokensPurchased[_participant] <= PURCHASER_MAX_TOKEN_CAP_DAY1);
         } else {
-            require(tokensPurchased[participant] <= PURCHASER_MAX_TOKEN_CAP);
+            require(tokensPurchased[_participant] <= PURCHASER_MAX_TOKEN_CAP);
         }
 
-        token.transfer(participant, tokens);
+        token.transfer(_participant, tokens);
 
         TokenPurchase(
             msg.sender,
-            participant,
-            weiAmount,
+            _participant,
+            _weiAmount,
             tokens
         );
     }
 
     /**
-     * @dev Additional finalization logic. Enables token transfers.
+     * @dev Additional finalization logic. 
+     * Enables token transfers and burns all unsold tokens.
      */
     function finalization() internal {
         withdraw(0);
@@ -208,7 +227,7 @@ contract GdprCrowdsale is Pausable, GdprConfig {
 
     /**
      * @dev Burn all remaining (unsold) tokens.
-     *      This should be called after sale finalization
+     * This should be called automatically after sale finalization
      */
     function burnUnsold() internal {
         // All tokens held by this contract get burned
