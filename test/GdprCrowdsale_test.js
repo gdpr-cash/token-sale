@@ -57,7 +57,7 @@ contract('GdprCrowdsale', accounts => {
         it('distributed the initial token amounts correctly', async () => {
             // Get allocation wallet addresses   
             const expertsPool = await saleContract.EXPERTS_POOL_ADDR.call()
-            const communityPool = await saleContract.COMMUNITY_POOL_ADDR.call()
+            const communityPool = owner
             const teamPool = await saleContract.TEAM_POOL_ADDR.call()
             const legalExpensesAddress = await saleContract.LEGAL_EXPENSES_ADDR.call()
 

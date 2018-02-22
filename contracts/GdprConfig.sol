@@ -28,11 +28,11 @@ contract GdprConfig {
     uint256 public constant TOTAL_SUPPLY_CAP = 200000000 * MIN_TOKEN_UNIT;
     // 60% of the total supply cap
     uint256 public constant SALE_CAP = 120000000 * MIN_TOKEN_UNIT;
-    // Tokens for the experts 20%
+    // 20% tokens for the experts
     uint256 public constant EXPERTS_POOL_TOKENS = 40000000 * MIN_TOKEN_UNIT;
-    // Tokens for marketing expenses 10%
+    // 10% tokens for marketing expenses
     uint256 public constant COMMUNITY_POOL_TOKENS = 20000000 * MIN_TOKEN_UNIT;
-    // Founders' distribution. Total = 9%
+    // 9% founders' distribution
     uint256 public constant TEAM_POOL_TOKENS = 18000000 * MIN_TOKEN_UNIT;
     // 1% for legal advisors
     uint256 public constant LEGAL_EXPENSES_TOKENS = 2000000 * MIN_TOKEN_UNIT;
