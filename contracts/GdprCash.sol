@@ -52,12 +52,6 @@ contract GdprCash is DetailedERC20, CappedToken, GdprConfig {
         // Generate all tokens
         mint(owner, TOTAL_SUPPLY_CAP);
         finishMinting();
-
-        // Allocate tokens to pools
-        transfer(EXPERTS_POOL_ADDR, EXPERTS_POOL_TOKENS);
-        transfer(COMMUNITY_POOL_ADDR, COMMUNITY_POOL_TOKENS);
-        transfer(TEAM_POOL_ADDR, TEAM_POOL_TOKENS);
-        transfer(LEGAL_EXPENSES_ADDR, LEGAL_EXPENSES_TOKENS);
     }
 
     /**
@@ -69,7 +63,13 @@ contract GdprCash is DetailedERC20, CappedToken, GdprConfig {
         require(_crowdsaleAddr != address(0));
         require(!transfersEnabled);
         crowdsale = _crowdsaleAddr;
+
+        // Allocate tokens to pools
         transfer(crowdsale, SALE_CAP);
+        transfer(EXPERTS_POOL_ADDR, EXPERTS_POOL_TOKENS);
+        transfer(COMMUNITY_POOL_ADDR, COMMUNITY_POOL_TOKENS);
+        transfer(TEAM_POOL_ADDR, TEAM_POOL_TOKENS);
+        transfer(LEGAL_EXPENSES_ADDR, LEGAL_EXPENSES_TOKENS);
     }
 
     /**

@@ -57,7 +57,7 @@ contract('GdprCrowdsale', accounts => {
         it('distributed the initial token amounts correctly', async () => {
             // Get allocation wallet addresses   
             const expertsPool = await saleContract.EXPERTS_POOL_ADDR.call()
-            const communityPool = owner
+            const communityPool = await saleContract.COMMUNITY_POOL_ADDR.call()
             const teamPool = await saleContract.TEAM_POOL_ADDR.call()
             const legalExpensesAddress = await saleContract.LEGAL_EXPENSES_ADDR.call()
 
@@ -118,29 +118,6 @@ contract('GdprCrowdsale', accounts => {
                 saleNewBalance.toNumber() - saleInitialBalance.toNumber(),
                 sendAmount
             )
-        })
-
-        it('does not allow purchases when paused', async () => {
-            const sender = buyer3
-
-            await saleContract.pause();
-
-            const sendAmount = web3.toWei(1, 'ether')
-            await assertThrows(
-                saleContract.sendTransaction({
-                    from: sender,
-                    value: sendAmount,
-                    gas: 200000
-                })
-            )
-
-            await saleContract.unpause();
-
-            saleContract.sendTransaction({
-                from: sender,
-                value: sendAmount,
-                gas: 200000
-            })
         })
 
         it('does not allow contributions below minimum cap per purchaser', async () => {
@@ -235,10 +212,6 @@ contract('GdprCrowdsale', accounts => {
             await saleContract.setRate(newRate);
             const changedRate = await saleContract.rate.call()
             assert.equal(changedRate, newRate)
-        })
-
-        it('cannot change start date once crowdsale has started', async () => {
-            await assertThrows(saleContract.setStartTime(now))
         })
 
         it('can change the end date if sale has not ended', async () => {

@@ -1,10 +1,16 @@
 GdprCash.deployed().then(inst => token = inst)
 GdprCrowdsale.deployed().then(inst2 => sale = inst2)
-owner = web3.eth.accounts[0]
-user2 = web3.eth.accounts[2]
-user3 = web3.eth.accounts[3]
 
-web3.eth.sendTransaction({from: user3, to: sale.address, value: web3.toWei(1, 'ether'), gas: 200000})
+owner = web3.eth.accounts[0]
+experts = web3.eth.accounts[1]
+community = web3.eth.accounts[2]
+team = web3.eth.accounts[3]
+legal = web3.eth.accounts[4]
+saleFunds = web3.eth.accounts[5]
+userA = web3.eth.accounts[6]
+userB = web3.eth.accounts[7]
+
+web3.eth.sendTransaction({from: userA, to: sale.address, value: web3.toWei(1, 'ether'), gas: 200000})
 sale.finalize()
 
 token.transfer(user3, 50, {from: owner})
@@ -15,8 +21,15 @@ token.balanceOf(user3).then(v => v.toString(10))
 sale.endTime().then(t => endTime = new Date(t.toNumber()*1000))
 
 token.approve(user3, 1000)
-token.transferFrom(owner, user2, 50, {from: user3})
+token.transferFrom(owner, userA, 50, {from: team})
 
-web3.eth.getBalance(sale.address).toString(10)
+web3.eth.getBalance(sale.address).toString(10)*10**-18
 wallet = "0x2932b7A2355D6fecc4b5c0B6BD44cC31df247a2e"
-web3.eth.getBalance(wallet).toString(10)
+web3.eth.getBalance(wallet).toString(10)*10**-18
+
+token.balanceOf(userA).then(v => v.toString(10))
+token.balanceOf(userB).then(v => v.toString(10))
+token.approve(userA, web3.toWei(1000), {from: experts})
+token.transferFrom(experts, userB, web3.toWei(500), {from: owner})
+token.balanceOf(userA).then(v => v.toString(10))
+token.balanceOf(userB).then(v => v.toString(10))
