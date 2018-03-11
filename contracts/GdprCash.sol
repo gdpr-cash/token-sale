@@ -55,9 +55,10 @@ contract GdprCash is DetailedERC20, CappedToken, GdprConfig {
 
         // Allocate tokens to pools
         transfer(EXPERTS_POOL_ADDR, EXPERTS_POOL_TOKENS);
-        transfer(COMMUNITY_POOL_ADDR, COMMUNITY_POOL_TOKENS);
+        transfer(MARKETING_POOL_ADDR, MARKETING_POOL_TOKENS);
         transfer(TEAM_POOL_ADDR, TEAM_POOL_TOKENS);
         transfer(LEGAL_EXPENSES_ADDR, LEGAL_EXPENSES_TOKENS);
+        transfer(RESERVE_POOL_ADDR, RESERVE_POOL_TOKENS);
     }
 
     /**

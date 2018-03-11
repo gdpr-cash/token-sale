@@ -9,11 +9,11 @@
   },
   "dependencies": {
     "truffle-hdwallet-provider": "0.0.3",
-    "zeppelin-solidity": "^1.6.0"
+    "zeppelin-solidity": "^1.7.0"
   },
   "devDependencies": {
     "solhint": "^1.1.10",
-    "solidity-coverage": "^0.4.9"
+    "solidity-coverage": "^0.4.11"
   },
   "scripts": {
     "test": "truffle test",

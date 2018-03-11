@@ -57,35 +57,37 @@ contract('GdprCrowdsale', accounts => {
         it('distributed the initial token amounts correctly', async () => {
             // Get allocation wallet addresses   
             const expertsPool = await saleContract.EXPERTS_POOL_ADDR.call()
-            const communityPool = owner
+            const marketingPool = await saleContract.MARKETING_POOL_ADDR.call()
             const teamPool = await saleContract.TEAM_POOL_ADDR.call()
-            const legalExpensesAddress = await saleContract.LEGAL_EXPENSES_ADDR.call()
+            const legalExpenses = await saleContract.LEGAL_EXPENSES_ADDR.call()
+            const reservePool = await saleContract.RESERVE_POOL_ADDR.call()
 
             // Get expected token amounts from contract config
             const expectedSaleTokens = await saleContract.SALE_CAP.call()
             const expectedExpertsTokens = await saleContract.EXPERTS_POOL_TOKENS.call()
-            const expectedCommunityTokens = await saleContract.COMMUNITY_POOL_TOKENS.call()
+            const expectedMarketingTokens = await saleContract.MARKETING_POOL_TOKENS.call()
             const expectedTeamTokens = await saleContract.TEAM_POOL_TOKENS.call()
             const expectedLegalTokens = await saleContract.LEGAL_EXPENSES_TOKENS.call()
+            const expectedReserveTokens = await saleContract.RESERVE_POOL_TOKENS.call()
 
             // Get actual balances
             const saleBalance = await tokenContract.balanceOf(saleContract.address)
             const expertsBalance = await tokenContract.balanceOf.call(expertsPool)
-            const communityBalance = await tokenContract.balanceOf.call(communityPool)
+            const marketingBalance = await tokenContract.balanceOf.call(marketingPool)
             const teamBalance = await tokenContract.balanceOf.call(teamPool)
-            const legalBalance = await tokenContract.balanceOf.call(
-                legalExpensesAddress
-            )
+            const legalBalance = await tokenContract.balanceOf.call(legalExpenses)
+            const reserveBalance = await tokenContract.balanceOf.call(reservePool)
 
             // Check allocation was done as expected
             assert.equal(saleBalance.toNumber(), expectedSaleTokens.toNumber())
             assert.equal(expertsBalance.toNumber(), expectedExpertsTokens.toNumber())
             assert.equal(
-                communityBalance.toNumber(),
-                expectedCommunityTokens.toNumber()
+                marketingBalance.toNumber(),
+                expectedMarketingTokens.toNumber()
             )
             assert.equal(teamBalance.toNumber(), expectedTeamTokens.toNumber())
             assert.equal(legalBalance.toNumber(), expectedLegalTokens.toNumber())
+            assert.equal(reserveBalance.toNumber(), expectedReserveTokens.toNumber())
         })
 
         it('cannot change start time if sale already started', async () => {
