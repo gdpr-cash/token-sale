@@ -3,7 +3,7 @@ const GdprCrowdsale = artifacts.require('./GdprCrowdsale.sol')
 
 module.exports = (deployer, network, accounts) => {
     const startTime = 1519084800 // 15 Feb 2018 16:14:00 EET
-    const endTime = 1519257600 // 25 May 2018 00:00:00 UTC
+    const endTime = 1521715920 // 25 May 2018 00:00:00 UTC
 
     var sale
     var token

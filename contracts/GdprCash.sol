@@ -70,6 +70,8 @@ contract GdprCash is DetailedERC20, CappedToken, GdprConfig {
         require(_crowdsaleAddr != address(0));
         require(!transfersEnabled);
         crowdsale = _crowdsaleAddr;
+
+        // Allocate tokens to pools
         transfer(crowdsale, SALE_CAP);
     }
 

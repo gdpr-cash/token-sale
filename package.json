@@ -30,14 +30,14 @@
     "GDPR",
     "Privacy"
   ],
-  "author": "Choko Bokov",
+  "author": "GDPR.CASH Core Team",
   "contributors": [
-    "",
+    "Ivaylo Iliev",
     ""
   ],
   "license": "MIT",
   "bugs": {
     "url": ""
   },
-  "homepage": ""
+  "homepage": "https://gdpr.cash"
 }
