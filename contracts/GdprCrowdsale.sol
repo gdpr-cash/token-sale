@@ -1,11 +1,11 @@
 pragma solidity ^0.4.19;
 
-import './GdprConfig.sol';
-import './GdprCash.sol';
+//import "./GdprConfig.sol";
+import "./GdprCash.sol";
 
-import 'zeppelin-solidity/contracts/math/SafeMath.sol';
-import 'zeppelin-solidity/contracts/ownership/Ownable.sol';
-import 'zeppelin-solidity/contracts/lifecycle/Pausable.sol';
+import "zeppelin-solidity/contracts/math/SafeMath.sol";
+import "zeppelin-solidity/contracts/ownership/Ownable.sol";
+import "zeppelin-solidity/contracts/lifecycle/Pausable.sol";
 
 
 /**
@@ -54,6 +54,15 @@ contract GdprCrowdsale is Pausable, GdprConfig {
         uint256 value, 
         uint256 amount);
 
+     /**
+     * Event for token purchase logging
+     * @param purchaser who paid for the tokens
+     * @param amount amount of tokens purchased
+     */
+    event TokenPresale(
+        address indexed purchaser, 
+        uint256 amount);
+
     /**
      * Event invoked when the rate is changed
      * @param newRate The new rate GDPR / ETH
@@ -89,8 +98,8 @@ contract GdprCrowdsale is Pausable, GdprConfig {
         startTime = _startTime;
         endTime = _endTime;
         token = GdprCash(_tokenAddress);
-        rate = INITIAL_RATE;
-        wallet = SALE_FUNDS_ADDR;
+        rate = token.INITIAL_RATE();
+        wallet = token.SALE_FUNDS_ADDR();
     }
 
     /**
@@ -175,6 +184,26 @@ contract GdprCrowdsale is Pausable, GdprConfig {
     }
 
     /**
+     *  @dev Registers a presale order
+     *  @param _participant address The address of the token purchaser
+     *  @param _tokenAmount uin256 The amount of GDPR Cash (in wei) purchased
+     */
+    function addPresaleOrder(address _participant, uint256 _tokenAmount) external onlyOwner {
+        require(now < startTime);
+
+        // Update state
+        tokensPurchased[_participant] = tokensPurchased[_participant].add(_tokenAmount);
+        totalPurchased = totalPurchased.add(_tokenAmount);
+
+        token.transfer(_participant, _tokenAmount);
+
+        TokenPresale(
+            _participant,
+            _tokenAmount
+        );
+    }
+
+    /**
      *  @dev Token purchase logic. Used internally.
      *  @param _participant address The address of the token purchaser
      *  @param _weiAmount uin256 The amount of ether in wei sent to the contract
@@ -195,14 +224,14 @@ contract GdprCrowdsale is Pausable, GdprConfig {
         // update state
         weiRaised = weiRaised.add(_weiAmount);
 
-        require(totalPurchased <= SALE_CAP);
-        require(tokensPurchased[_participant] >= PURCHASER_MIN_TOKEN_CAP);
+        require(totalPurchased <= token.SALE_CAP());
+        require(tokensPurchased[_participant] >= token.PURCHASER_MIN_TOKEN_CAP());
 
         if (now < startTime + 86400) {
             // if still during the first day of token sale, apply different max cap
-            require(tokensPurchased[_participant] <= PURCHASER_MAX_TOKEN_CAP_DAY1);
+            require(tokensPurchased[_participant] <= token.PURCHASER_MAX_TOKEN_CAP_DAY1());
         } else {
-            require(tokensPurchased[_participant] <= PURCHASER_MAX_TOKEN_CAP);
+            require(tokensPurchased[_participant] <= token.PURCHASER_MAX_TOKEN_CAP());
         }
 
         token.transfer(_participant, tokens);

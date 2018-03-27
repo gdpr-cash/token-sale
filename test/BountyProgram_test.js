@@ -15,8 +15,11 @@ contract('GdprCash', accounts => {
         marketing,
         team,
         legal,
+        reserve,
+        funds,
         userA,
-        userB
+        userB,
+        userC
     ] = accounts
 
     let tokenContract
@@ -58,6 +61,7 @@ contract('GdprCash', accounts => {
             assert.equal(isFinalized, false)
 
             const sendAmount = web3.toWei(5000)
+            await tokenContract.approve(owner, sendAmount, {from: experts})
             const userBalanceBefore = await tokenContract.balanceOf.call(userA)
             await tokenContract.transferFrom(experts, userA, sendAmount, {from: owner})
             //const userBalanceAfter = await tokenContract.balanceOf.call(userA)

@@ -31,7 +31,7 @@ contract('GdprCrowdsale', accounts => {
         before(async () => {
             tokenContract = await GdprCash.new()
             saleContract = await GdprCrowdsale.new(start, end, tokenContract.address)
-            await tokenContract.setCrowdsale(saleContract.address);
+            await tokenContract.setCrowdsale(saleContract.address)
         })
 
         it('deployed with the right ownership', async () => {
@@ -46,12 +46,12 @@ contract('GdprCrowdsale', accounts => {
         })
 
         it('has right settings', async () => {
-            const name = await tokenContract.name.call();
-            const symbol = await tokenContract.symbol.call();
-            const decimals = await tokenContract.decimals.call();
-            assert.equal(name, "CHARACTER1");
-            assert.equal(symbol, "CHR1");
-            assert.equal(decimals, 18);
+            const name = await tokenContract.name.call()
+            const symbol = await tokenContract.symbol.call()
+            const decimals = await tokenContract.decimals.call()
+            assert.equal(name, "CHARACTER1")
+            assert.equal(symbol, "CHR1")
+            assert.equal(decimals, 18)
         })
 
         it('distributed the initial token amounts correctly', async () => {
@@ -154,6 +154,12 @@ contract('GdprCrowdsale', accounts => {
             assert.isAbove(balance2.toNumber(), balance1.toNumber())
         })
 
+        it('does not allow presales after the ico has started', async () => {
+            await assertThrows(
+                saleContract.addPresaleOrder(buyer4, 5000)
+            )
+        })
+
         it('does not allow contributions above $2000 per purchaser on day 1', async () => {
             const sender = buyer4
 
@@ -211,7 +217,7 @@ contract('GdprCrowdsale', accounts => {
         it('does not allow updating the rate', async () => {
             const rate = await saleContract.rate.call()
             const newRate = rate.toNumber() + 100
-            await saleContract.setRate(newRate);
+            await saleContract.setRate(newRate)
             const changedRate = await saleContract.rate.call()
             assert.equal(changedRate, newRate)
         })
@@ -230,7 +236,7 @@ contract('GdprCrowdsale', accounts => {
         it('does not allow contributions after end date', async () => {
             const sender = buyer
 
-            const endedBefore = await saleContract.hasEnded();
+            const endedBefore = await saleContract.hasEnded()
             assert.equal(endedBefore, false)
 
 
@@ -238,7 +244,7 @@ contract('GdprCrowdsale', accounts => {
             const untilEnd = end - now
             timeTravel(untilEnd)
 
-            const endedAfter = await saleContract.hasEnded();
+            const endedAfter = await saleContract.hasEnded()
             assert.equal(endedAfter, true)
 
             // check transaction fails

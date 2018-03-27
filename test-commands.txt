@@ -6,9 +6,10 @@ experts = web3.eth.accounts[1]
 community = web3.eth.accounts[2]
 team = web3.eth.accounts[3]
 legal = web3.eth.accounts[4]
-saleFunds = web3.eth.accounts[5]
-userA = web3.eth.accounts[6]
-userB = web3.eth.accounts[7]
+reserve = web3.eth.accounts[5]
+saleFunds = web3.eth.accounts[6]
+userA = web3.eth.accounts[7]
+userB = web3.eth.accounts[8]
 
 web3.eth.sendTransaction({from: userA, to: sale.address, value: web3.toWei(1, 'ether'), gas: 200000})
 sale.finalize()

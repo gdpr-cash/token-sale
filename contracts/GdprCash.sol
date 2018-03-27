@@ -48,22 +48,11 @@ contract GdprCash is DetailedERC20, CappedToken, GdprConfig {
     function GdprCash() public 
                 DetailedERC20(TOKEN_NAME, TOKEN_SYMBOL, TOKEN_DECIMALS)  
                 CappedToken(TOTAL_SUPPLY_CAP) {
-
-        // Generate all tokens
-        mint(owner, TOTAL_SUPPLY_CAP);
-        finishMinting();
-
-        // Allocate tokens to pools
-        transfer(EXPERTS_POOL_ADDR, EXPERTS_POOL_TOKENS);
-        transfer(MARKETING_POOL_ADDR, MARKETING_POOL_TOKENS);
-        transfer(TEAM_POOL_ADDR, TEAM_POOL_TOKENS);
-        transfer(LEGAL_EXPENSES_ADDR, LEGAL_EXPENSES_TOKENS);
-        transfer(RESERVE_POOL_ADDR, RESERVE_POOL_TOKENS);
     }
 
     /**
-     * @dev Enables token transfers.
-     *      Called when the token sale is successfully finalized
+     * @dev Sets the crowdsale. Can be invoked only once and by the owner
+     * @param _crowdsaleAddr address The address of the crowdsale contract
      */
     function setCrowdsale(address _crowdsaleAddr) external onlyOwner {
         require(crowdsale == address(0));
@@ -71,8 +60,17 @@ contract GdprCash is DetailedERC20, CappedToken, GdprConfig {
         require(!transfersEnabled);
         crowdsale = _crowdsaleAddr;
 
-        // Allocate tokens to pools
-        transfer(crowdsale, SALE_CAP);
+        // Generate sale tokens
+        mint(crowdsale, SALE_CAP);
+
+        // Distribute non-sale tokens to pools
+        mint(EXPERTS_POOL_ADDR, EXPERTS_POOL_TOKENS);
+        mint(MARKETING_POOL_ADDR, MARKETING_POOL_TOKENS);
+        mint(TEAM_POOL_ADDR, TEAM_POOL_TOKENS);
+        mint(LEGAL_EXPENSES_ADDR, LEGAL_EXPENSES_TOKENS);
+        mint(RESERVE_POOL_ADDR, RESERVE_POOL_TOKENS);
+
+        finishMinting();
     }
 
     /**

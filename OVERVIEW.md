@@ -1,79 +1,45 @@
-https://selfkey.org/instructions/ 
+https://gdpr.cash
 
-# SelfKey contract main structure
+# GDPR Cash contract main structure
 
 ## Contracts
 
-* CrowdsaleConfig
-* SelfKeyToken
-* SelfKeyCrowdsale
-* KYCRefundVault
+* GdprConfig
+* GdprCash
+* GdprCrowdsale
 
-### CrowdsaleConfig
+### GdprConfig
 
-It holds all constants to be used by the different functions of the Crowdsale contract, i.e. all "caps" and token allocation amounts (such as foundation pool, founders, legal expenses, etc)
+Holds all settings for the token and the crowdsale, such as the cap, the token distribution etc.
 
-### SelfKeyToken
+### GdprCash
 
-Simple token contract, it implements the ERC20 standard, meaning crucial functions such as "transfer" and "balanceOf" are here. It also implements a `burn` function intended to "destroy" a certain amount of tokens, this is only callable by the contract owner, which is the `SelfKeyCrowdsale` contract.
+The token itself defined as a standard ERC20 token with few extensions - it is burnable and is capped. Transfers are by default disabled, and are enabled after the crowdsale is finalized.
 
-Transfers are by default disabled, and can only be enabled by the owner (`SelfKeyCrowdsale` contract). This should be done after successful crowdsale finalization.
+### GdprCrowdsale
 
-### SelfKeyCrowdsale
+The contract dealing with the crowdsale process. It is limited in time and is pausable. Participant must send their contributions directly to this contract. However their tokens will be locked until the sale is over. After that all unsold tokens will be burned and the transfers will be unlocked.
+The participation is limited especially on day 1.
 
-The main contract for handling all token sale logic, including private pre-sale (pre-commitments), public sale and finalization stages.
+## GdprCrowdsale Contract Overview
 
-### KYCRefundVault
-
-This is a contract that inherits from OpenZeppelin's `RefundVault`, which is a contract that takes hold of all ETH transferred to the crowdsale contract, and keeps it until the crowdsale is successfully finalized, in which case it forwards all the funds to the contract owner's wallet. If token sale is not successful (minimum goal is not reached), the contract enables itself for refunds, which have to be "claimed" by the participants through a public `claimRefund` method in the contract.
-
-`KYCRefundVault` also adds the possibility for certain specific participants to claim refunds regardless of the general state of the vault. This is used for allowing KYC-rejected participants to withdraw their funds anytime.
-
-
-## SelfKeyCrowdsale Contract Overview
-
-Besides the parameters "hard-coded" in `SelfKeyConfig`, the following parameters are passed to the Crowdsale contract at deployment time:
+Besides the parameters "hard-coded" in `GdprConfig`, the following parameters are passed to the Crowdsale contract at deployment time:
 
 * Start time
 * End time
-* Rate (how many tokens per wei)
-* Pre-sale rate (for public pre-sale purchases)
-* Contract owner wallet
-* Goal (minimum expected to raise)
-
-And the more "SelfKey-specific" parameters:
-
-* Foundation pool wallet address
-* Founders pool wallet address
-* Legal Expenses wallet address
-
-### KYC Verification
-
-The `SelfKeyCrowdsale` contract features a list of addresses that are said (by the contract owner) to have passed a KYC process. This process is completely off-chain and depending on other systems, the contract has no knowledge on this regard, it only marks given addresses as verfied.
-
-KYC verification can be done even before sale starts and even after end date has been reached (but crowdsale has not been manually finalized) by invoking the `verifyKYC` method from a SelfKey wallet or web3-enabled webpage.
-
-A `rejectKYC` method is also provided for cases where the given address is not compliant with the KYC process, in which case the contributed funds are returned to its owner and the purchased tokens are put back in the sale pool.
-
-**Currently under development**: "batch" verification/rejection of KYC status is provided as well, so that the crowdsale contract owner is able to verify or reject a list of Ethereum addresses at once.
-
-All addresses must be either verified or rejected for crowdsale finalization. In case there are pending addresses
-for KYC check, they are all automatically closed as "unverified" at finalization time.
-
+* Token address
 
 ### Initial allocation of tokens
 
-At crowdsale contract deployment time, and according to the crowdsale terms agreed upon, a percentage of tokens is splitted among certain addresses, namely:
+At token contract deployment time, and according to our terms, a percentage of tokens is splitted among certain addresses, namely:
 
-* SelfKey Foundation pool: 49.5% (for incentivization purposes)
-* Legal expenses pool: 1%
-* Founders' pool: 16.5%
+* Experts pool: 10% (to incentivize our experts)
+* Marketing pool: 10% (for marketing expenses)
+* Legal expenses: 1%
+* Team pool: 9% 
+* Reserve: 10% (for marketplace bootstrapping)
 
-Founders' tokens are further splitted in the following manner:
-
-* 1/3 is made immediately available
-* 1/3 is "time-locked" for 6 months
-* 1/3 is time-locked for an additional 6 months (1 year total)
+The remaining 60% are available for pre-sale and crowd-sale.
 
 ### Stages of the token sale
 

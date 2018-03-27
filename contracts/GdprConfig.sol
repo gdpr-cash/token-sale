@@ -40,10 +40,10 @@ contract GdprConfig {
     uint256 public constant RESERVE_POOL_TOKENS = 20000000 * MIN_TOKEN_UNIT;
 
     // Contract wallet addresses for initial allocation
-    address public constant EXPERTS_POOL_ADDR = 0x1a1Cfa223FF0FF7E9373E6e0914FBfb0F9d7E482;
-    address public constant MARKETING_POOL_ADDR = 0xf0BEd08A7971D7353BE18b45FfCF1D5D7900eef1;
-    address public constant TEAM_POOL_ADDR = 0xFC3897d37Fae4Eb3aa6041b3616ecB99206F445C;
-    address public constant LEGAL_EXPENSES_ADDR = 0xd99CF78420D5e0e36a9C30E3C1910d983307ad8D;
-    address public constant SALE_FUNDS_ADDR = 0x2932b7A2355D6fecc4b5c0B6BD44cC31df247a2e;
-    address public constant RESERVE_POOL_ADDR = 0x4747b03f8F04FD1915335462612de8FB9E2a409f;
+    address public constant EXPERTS_POOL_ADDR = 0x289bB02deaF473c6Aa5edc4886A71D85c18F328B;
+    address public constant MARKETING_POOL_ADDR = 0x7BFD82C978EDDce94fe12eBF364c6943c7cC2f27;
+    address public constant TEAM_POOL_ADDR = 0xB4AfbF5F39895adf213194198c0ba316f801B24d;
+    address public constant LEGAL_EXPENSES_ADDR = 0xf72931B08f8Ef3d8811aD682cE24A514105f713c;
+    address public constant SALE_FUNDS_ADDR = 0xb8E81a87c6D96ed5f424F0A33F13b046C1f24a24;
+    address public constant RESERVE_POOL_ADDR = 0x010aAA10BfB913184C5b2E046143c2ec8A037413;
 }
