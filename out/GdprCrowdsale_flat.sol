@@ -1,5 +1,4 @@
-pragma solidity ^0.4.19;
-
+pragma solidity ^0.4.18;
 
 /**
  * @title GdprConfig
@@ -28,69 +27,26 @@ contract GdprConfig {
     uint256 public constant TOTAL_SUPPLY_CAP = 200000000 * MIN_TOKEN_UNIT;
     // 60% of the total supply cap
     uint256 public constant SALE_CAP = 120000000 * MIN_TOKEN_UNIT;
-    // 20% tokens for the experts
-    uint256 public constant EXPERTS_POOL_TOKENS = 40000000 * MIN_TOKEN_UNIT;
+    // 10% tokens for the experts
+    uint256 public constant EXPERTS_POOL_TOKENS = 20000000 * MIN_TOKEN_UNIT;
     // 10% tokens for marketing expenses
-    uint256 public constant COMMUNITY_POOL_TOKENS = 20000000 * MIN_TOKEN_UNIT;
+    uint256 public constant MARKETING_POOL_TOKENS = 20000000 * MIN_TOKEN_UNIT;
     // 9% founders' distribution
     uint256 public constant TEAM_POOL_TOKENS = 18000000 * MIN_TOKEN_UNIT;
     // 1% for legal advisors
     uint256 public constant LEGAL_EXPENSES_TOKENS = 2000000 * MIN_TOKEN_UNIT;
+    // 10% tokens for the reserve
+    uint256 public constant RESERVE_POOL_TOKENS = 20000000 * MIN_TOKEN_UNIT;
 
     // Contract wallet addresses for initial allocation
-    address public constant EXPERTS_POOL_ADDR = 0xf17f52151EbEF6C7334FAD080c5704D77216b732;
-    address public constant COMMUNITY_POOL_ADDR = 0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef;
-    address public constant TEAM_POOL_ADDR = 0x821aEa9a577a9b44299B9c15c88cf3087F3b5544;
-    address public constant LEGAL_EXPENSES_ADDR = 0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2;
-    address public constant SALE_FUNDS_ADDR = 0x2932b7A2355D6fecc4b5c0B6BD44cC31df247a2e;
+    address public constant EXPERTS_POOL_ADDR = 0x289bB02deaF473c6Aa5edc4886A71D85c18F328B;
+    address public constant MARKETING_POOL_ADDR = 0x7BFD82C978EDDce94fe12eBF364c6943c7cC2f27;
+    address public constant TEAM_POOL_ADDR = 0xB4AfbF5F39895adf213194198c0ba316f801B24d;
+    address public constant LEGAL_EXPENSES_ADDR = 0xf72931B08f8Ef3d8811aD682cE24A514105f713c;
+    address public constant SALE_FUNDS_ADDR = 0xb8E81a87c6D96ed5f424F0A33F13b046C1f24a24;
+    address public constant RESERVE_POOL_ADDR = 0x010aAA10BfB913184C5b2E046143c2ec8A037413;
 }
 
-
-/**
- * @title SafeMath
- * @dev Math operations with safety checks that throw on error
- */
-library SafeMath {
-
-  /**
-  * @dev Multiplies two numbers, throws on overflow.
-  */
-  function mul(uint256 a, uint256 b) internal pure returns (uint256) {
-    if (a == 0) {
-      return 0;
-    }
-    uint256 c = a * b;
-    assert(c / a == b);
-    return c;
-  }
-
-  /**
-  * @dev Integer division of two numbers, truncating the quotient.
-  */
-  function div(uint256 a, uint256 b) internal pure returns (uint256) {
-    // assert(b > 0); // Solidity automatically throws when dividing by 0
-    uint256 c = a / b;
-    // assert(a == b * c + a % b); // There is no case in which this doesn't hold
-    return c;
-  }
-
-  /**
-  * @dev Substracts two numbers, throws on overflow (i.e. if subtrahend is greater than minuend).
-  */
-  function sub(uint256 a, uint256 b) internal pure returns (uint256) {
-    assert(b <= a);
-    return a - b;
-  }
-
-  /**
-  * @dev Adds two numbers, throws on overflow.
-  */
-  function add(uint256 a, uint256 b) internal pure returns (uint256) {
-    uint256 c = a + b;
-    assert(c >= a);
-    return c;
-  }
-}
 
 
 /**
@@ -135,51 +91,6 @@ contract Ownable {
 
 
 /**
- * @title Pausable
- * @dev Base contract which allows children to implement an emergency stop mechanism.
- */
-contract Pausable is Ownable {
-  event Pause();
-  event Unpause();
-
-  bool public paused = false;
-
-
-  /**
-   * @dev Modifier to make a function callable only when the contract is not paused.
-   */
-  modifier whenNotPaused() {
-    require(!paused);
-    _;
-  }
-
-  /**
-   * @dev Modifier to make a function callable only when the contract is paused.
-   */
-  modifier whenPaused() {
-    require(paused);
-    _;
-  }
-
-  /**
-   * @dev called by the owner to pause, triggers stopped state
-   */
-  function pause() onlyOwner whenNotPaused public {
-    paused = true;
-    Pause();
-  }
-
-  /**
-   * @dev called by the owner to unpause, returns to normal state
-   */
-  function unpause() onlyOwner whenPaused public {
-    paused = false;
-    Unpause();
-  }
-}
-
-
-/**
  * @title ERC20Basic
  * @dev Simpler version of ERC20 interface
  * @dev see https://github.com/ethereum/EIPs/issues/179
@@ -202,6 +113,12 @@ contract ERC20 is ERC20Basic {
   function approve(address spender, uint256 value) public returns (bool);
   event Approval(address indexed owner, address indexed spender, uint256 value);
 }
+
+
+
+
+
+
 
 
 contract DetailedERC20 is ERC20 {
@@ -260,7 +177,6 @@ contract BasicToken is ERC20Basic {
   }
 
 }
-
 
 /**
  * @title Standard ERC20 token
@@ -357,7 +273,6 @@ contract StandardToken is ERC20, BasicToken {
 
 }
 
-
 /**
  * @title Mintable token
  * @dev Simple ERC20 Token example, with mintable token creation
@@ -402,6 +317,7 @@ contract MintableToken is StandardToken, Ownable {
 }
 
 
+
 /**
  * @title Capped token
  * @dev Mintable token with a token cap.
@@ -430,6 +346,10 @@ contract CappedToken is MintableToken {
 }
 
 
+
+
+
+
 /**
  * @title Burnable Token
  * @dev Token that can be irreversibly burned (destroyed).
@@ -453,6 +373,7 @@ contract BurnableToken is BasicToken {
     Burn(burner, _value);
   }
 }
+
 
 
 /**
@@ -496,15 +417,11 @@ contract GdprCash is DetailedERC20, CappedToken, GdprConfig {
     function GdprCash() public 
                 DetailedERC20(TOKEN_NAME, TOKEN_SYMBOL, TOKEN_DECIMALS)  
                 CappedToken(TOTAL_SUPPLY_CAP) {
-
-        // Generate all tokens
-        mint(owner, TOTAL_SUPPLY_CAP);
-        finishMinting();
     }
 
     /**
-     * @dev Enables token transfers.
-     *      Called when the token sale is successfully finalized
+     * @dev Sets the crowdsale. Can be invoked only once and by the owner
+     * @param _crowdsaleAddr address The address of the crowdsale contract
      */
     function setCrowdsale(address _crowdsaleAddr) external onlyOwner {
         require(crowdsale == address(0));
@@ -512,12 +429,17 @@ contract GdprCash is DetailedERC20, CappedToken, GdprConfig {
         require(!transfersEnabled);
         crowdsale = _crowdsaleAddr;
 
-        // Allocate tokens to pools
-        transfer(crowdsale, SALE_CAP);
-        transfer(EXPERTS_POOL_ADDR, EXPERTS_POOL_TOKENS);
-        transfer(COMMUNITY_POOL_ADDR, COMMUNITY_POOL_TOKENS);
-        transfer(TEAM_POOL_ADDR, TEAM_POOL_TOKENS);
-        transfer(LEGAL_EXPENSES_ADDR, LEGAL_EXPENSES_TOKENS);
+        // Generate sale tokens
+        mint(crowdsale, SALE_CAP);
+
+        // Distribute non-sale tokens to pools
+        mint(EXPERTS_POOL_ADDR, EXPERTS_POOL_TOKENS);
+        mint(MARKETING_POOL_ADDR, MARKETING_POOL_TOKENS);
+        mint(TEAM_POOL_ADDR, TEAM_POOL_TOKENS);
+        mint(LEGAL_EXPENSES_ADDR, LEGAL_EXPENSES_TOKENS);
+        mint(RESERVE_POOL_ADDR, RESERVE_POOL_TOKENS);
+
+        finishMinting();
     }
 
     /**
@@ -566,11 +488,113 @@ contract GdprCash is DetailedERC20, CappedToken, GdprConfig {
 }
 
 
+
+
+
+/**
+ * @title SafeMath
+ * @dev Math operations with safety checks that throw on error
+ */
+library SafeMath {
+
+  /**
+  * @dev Multiplies two numbers, throws on overflow.
+  */
+  function mul(uint256 a, uint256 b) internal pure returns (uint256) {
+    if (a == 0) {
+      return 0;
+    }
+    uint256 c = a * b;
+    assert(c / a == b);
+    return c;
+  }
+
+  /**
+  * @dev Integer division of two numbers, truncating the quotient.
+  */
+  function div(uint256 a, uint256 b) internal pure returns (uint256) {
+    // assert(b > 0); // Solidity automatically throws when dividing by 0
+    uint256 c = a / b;
+    // assert(a == b * c + a % b); // There is no case in which this doesn't hold
+    return c;
+  }
+
+  /**
+  * @dev Substracts two numbers, throws on overflow (i.e. if subtrahend is greater than minuend).
+  */
+  function sub(uint256 a, uint256 b) internal pure returns (uint256) {
+    assert(b <= a);
+    return a - b;
+  }
+
+  /**
+  * @dev Adds two numbers, throws on overflow.
+  */
+  function add(uint256 a, uint256 b) internal pure returns (uint256) {
+    uint256 c = a + b;
+    assert(c >= a);
+    return c;
+  }
+}
+
+
+
+
+
+
+
+
+/**
+ * @title Pausable
+ * @dev Base contract which allows children to implement an emergency stop mechanism.
+ */
+contract Pausable is Ownable {
+  event Pause();
+  event Unpause();
+
+  bool public paused = false;
+
+
+  /**
+   * @dev Modifier to make a function callable only when the contract is not paused.
+   */
+  modifier whenNotPaused() {
+    require(!paused);
+    _;
+  }
+
+  /**
+   * @dev Modifier to make a function callable only when the contract is paused.
+   */
+  modifier whenPaused() {
+    require(paused);
+    _;
+  }
+
+  /**
+   * @dev called by the owner to pause, triggers stopped state
+   */
+  function pause() onlyOwner whenNotPaused public {
+    paused = true;
+    Pause();
+  }
+
+  /**
+   * @dev called by the owner to unpause, returns to normal state
+   */
+  function unpause() onlyOwner whenPaused public {
+    paused = false;
+    Unpause();
+  }
+}
+
+
+
 /**
  * @title GDPR Crowdsale
  * @dev GDPR Cash crowdsale contract. 
  */
-contract GdprCrowdsale is Pausable, GdprConfig {
+contract GdprCrowdsale is Pausable {
     using SafeMath for uint256;
 
     // Token contract
@@ -612,6 +636,15 @@ contract GdprCrowdsale is Pausable, GdprConfig {
         uint256 value, 
         uint256 amount);
 
+     /**
+     * Event for token purchase logging
+     * @param purchaser who paid for the tokens
+     * @param amount amount of tokens purchased
+     */
+    event TokenPresale(
+        address indexed purchaser, 
+        uint256 amount);
+
     /**
      * Event invoked when the rate is changed
      * @param newRate The new rate GDPR / ETH
@@ -639,15 +672,16 @@ contract GdprCrowdsale is Pausable, GdprConfig {
         uint256 _startTime,
         uint256 _endTime,
         address _tokenAddress
-    ) public {
+    ) public
+    {
         require(_endTime > _startTime);
         require(_tokenAddress != address(0));
 
         startTime = _startTime;
         endTime = _endTime;
         token = GdprCash(_tokenAddress);
-        rate = INITIAL_RATE;
-        wallet = SALE_FUNDS_ADDR;
+        rate = token.INITIAL_RATE();
+        wallet = token.SALE_FUNDS_ADDR();
     }
 
     /**
@@ -663,7 +697,7 @@ contract GdprCrowdsale is Pausable, GdprConfig {
      * @dev Sets a new start date as long as token sale hasn't started yet
      * @param _startTime uint256 Unix timestamp of the new start time
      */
-    function setStartTime (uint256 _startTime) public onlyOwner {
+    function setStartTime(uint256 _startTime) public onlyOwner {
         require(now < startTime);
         require(_startTime > now);
         require(_startTime < endTime);
@@ -675,7 +709,7 @@ contract GdprCrowdsale is Pausable, GdprConfig {
      * @dev Sets a new end date as long as end date hasn't been reached
      * @param _endTime uint2t56 Unix timestamp of the new end time
      */
-    function setEndTime (uint256 _endTime) public onlyOwner {
+    function setEndTime(uint256 _endTime) public onlyOwner {
         require(now < endTime);
         require(_endTime > now);
         require(_endTime > startTime);
@@ -698,7 +732,7 @@ contract GdprCrowdsale is Pausable, GdprConfig {
      * work. Calls the contract's finalization function.
      */
     function finalize() public onlyOwner {
-        require(now > startTime);
+        require(now > endTime);
         require(!isFinalized);
 
         finalization();
@@ -721,14 +755,35 @@ contract GdprCrowdsale is Pausable, GdprConfig {
      * If 0 supplied transfers the entire balance.
      */
     function withdraw(uint256 _amount) public onlyOwner {
-        require(this.balance > 0);
-        require(_amount <= this.balance);
+        uint256 totalBalance = address(this).balance;
+        require(totalBalance > 0);
+        require(_amount <= totalBalance);
         uint256 balanceToSend = _amount;
         if (balanceToSend == 0) {
-            balanceToSend = this.balance; 
+            balanceToSend = totalBalance; 
         }
         wallet.transfer(balanceToSend);
         FundWithdrawal(balanceToSend);
+    }
+
+    /**
+     *  @dev Registers a presale order
+     *  @param _participant address The address of the token purchaser
+     *  @param _tokenAmount uin256 The amount of GDPR Cash (in wei) purchased
+     */
+    function addPresaleOrder(address _participant, uint256 _tokenAmount) external onlyOwner {
+        require(now < startTime);
+
+        // Update state
+        tokensPurchased[_participant] = tokensPurchased[_participant].add(_tokenAmount);
+        totalPurchased = totalPurchased.add(_tokenAmount);
+
+        token.transfer(_participant, _tokenAmount);
+
+        TokenPresale(
+            _participant,
+            _tokenAmount
+        );
     }
 
     /**
@@ -752,14 +807,14 @@ contract GdprCrowdsale is Pausable, GdprConfig {
         // update state
         weiRaised = weiRaised.add(_weiAmount);
 
-        require(totalPurchased <= SALE_CAP);
-        require(tokensPurchased[_participant] >= PURCHASER_MIN_TOKEN_CAP);
+        require(totalPurchased <= token.SALE_CAP());
+        require(tokensPurchased[_participant] >= token.PURCHASER_MIN_TOKEN_CAP());
 
         if (now < startTime + 86400) {
             // if still during the first day of token sale, apply different max cap
-            require(tokensPurchased[_participant] <= PURCHASER_MAX_TOKEN_CAP_DAY1);
+            require(tokensPurchased[_participant] <= token.PURCHASER_MAX_TOKEN_CAP_DAY1());
         } else {
-            require(tokensPurchased[_participant] <= PURCHASER_MAX_TOKEN_CAP);
+            require(tokensPurchased[_participant] <= token.PURCHASER_MAX_TOKEN_CAP());
         }
 
         token.transfer(_participant, tokens);

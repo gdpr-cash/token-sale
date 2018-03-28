@@ -69,6 +69,3 @@ Then run
 
     npm run deploy:ropsten
 
-## Contributing
-
-Contributions are welcomed.  Please see [the contributing notes](CONTRIBUTING.md)

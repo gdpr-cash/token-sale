@@ -1,10 +1,10 @@
 pragma solidity ^0.4.19;
 
-import './GdprConfig.sol';
+import "./GdprConfig.sol";
 
-import 'zeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol';
-import 'zeppelin-solidity/contracts/token/ERC20/CappedToken.sol';
-import 'zeppelin-solidity/contracts/token/ERC20/BurnableToken.sol';
+import "zeppelin-solidity/contracts/token/ERC20/DetailedERC20.sol";
+import "zeppelin-solidity/contracts/token/ERC20/CappedToken.sol";
+import "zeppelin-solidity/contracts/token/ERC20/BurnableToken.sol";
 
 
 /**

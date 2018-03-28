@@ -1,6 +1,5 @@
 pragma solidity ^0.4.19;
 
-//import "./GdprConfig.sol";
 import "./GdprCash.sol";
 
 import "zeppelin-solidity/contracts/math/SafeMath.sol";
@@ -12,7 +11,7 @@ import "zeppelin-solidity/contracts/lifecycle/Pausable.sol";
  * @title GDPR Crowdsale
  * @dev GDPR Cash crowdsale contract. 
  */
-contract GdprCrowdsale is Pausable, GdprConfig {
+contract GdprCrowdsale is Pausable {
     using SafeMath for uint256;
 
     // Token contract
@@ -115,7 +114,7 @@ contract GdprCrowdsale is Pausable, GdprConfig {
      * @dev Sets a new start date as long as token sale hasn't started yet
      * @param _startTime uint256 Unix timestamp of the new start time
      */
-    function setStartTime (uint256 _startTime) public onlyOwner {
+    function setStartTime(uint256 _startTime) public onlyOwner {
         require(now < startTime);
         require(_startTime > now);
         require(_startTime < endTime);
@@ -127,7 +126,7 @@ contract GdprCrowdsale is Pausable, GdprConfig {
      * @dev Sets a new end date as long as end date hasn't been reached
      * @param _endTime uint2t56 Unix timestamp of the new end time
      */
-    function setEndTime (uint256 _endTime) public onlyOwner {
+    function setEndTime(uint256 _endTime) public onlyOwner {
         require(now < endTime);
         require(_endTime > now);
         require(_endTime > startTime);
@@ -150,7 +149,7 @@ contract GdprCrowdsale is Pausable, GdprConfig {
      * work. Calls the contract's finalization function.
      */
     function finalize() public onlyOwner {
-        require(now > startTime);
+        require(now > endTime);
         require(!isFinalized);
 
         finalization();

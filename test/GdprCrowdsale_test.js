@@ -56,19 +56,19 @@ contract('GdprCrowdsale', accounts => {
 
         it('distributed the initial token amounts correctly', async () => {
             // Get allocation wallet addresses   
-            const expertsPool = await saleContract.EXPERTS_POOL_ADDR.call()
-            const marketingPool = await saleContract.MARKETING_POOL_ADDR.call()
-            const teamPool = await saleContract.TEAM_POOL_ADDR.call()
-            const legalExpenses = await saleContract.LEGAL_EXPENSES_ADDR.call()
-            const reservePool = await saleContract.RESERVE_POOL_ADDR.call()
+            const expertsPool = await tokenContract.EXPERTS_POOL_ADDR.call()
+            const marketingPool = await tokenContract.MARKETING_POOL_ADDR.call()
+            const teamPool = await tokenContract.TEAM_POOL_ADDR.call()
+            const legalExpenses = await tokenContract.LEGAL_EXPENSES_ADDR.call()
+            const reservePool = await tokenContract.RESERVE_POOL_ADDR.call()
 
             // Get expected token amounts from contract config
-            const expectedSaleTokens = await saleContract.SALE_CAP.call()
-            const expectedExpertsTokens = await saleContract.EXPERTS_POOL_TOKENS.call()
-            const expectedMarketingTokens = await saleContract.MARKETING_POOL_TOKENS.call()
-            const expectedTeamTokens = await saleContract.TEAM_POOL_TOKENS.call()
-            const expectedLegalTokens = await saleContract.LEGAL_EXPENSES_TOKENS.call()
-            const expectedReserveTokens = await saleContract.RESERVE_POOL_TOKENS.call()
+            const expectedSaleTokens = await tokenContract.SALE_CAP.call()
+            const expectedExpertsTokens = await tokenContract.EXPERTS_POOL_TOKENS.call()
+            const expectedMarketingTokens = await tokenContract.MARKETING_POOL_TOKENS.call()
+            const expectedTeamTokens = await tokenContract.TEAM_POOL_TOKENS.call()
+            const expectedLegalTokens = await tokenContract.LEGAL_EXPENSES_TOKENS.call()
+            const expectedReserveTokens = await tokenContract.RESERVE_POOL_TOKENS.call()
 
             // Get actual balances
             const saleBalance = await tokenContract.balanceOf(saleContract.address)
@@ -120,10 +120,30 @@ contract('GdprCrowdsale', accounts => {
             )
         })
 
+        it('does not allow token purchases when paused', async () => {
+            await saleContract.pause();
+            let paused = await saleContract.paused.call()
+            assert.equal(paused, true)
+
+            const sender = buyer4
+            const sendAmount = web3.toWei(1, 'ether')
+            await assertThrows(
+                saleContract.sendTransaction({
+                    from: sender,
+                    value: sendAmount,
+                    gas: 200000
+                })
+            )
+
+            await saleContract.unpause()
+            paused = await saleContract.paused.call()
+            assert.equal(paused, false)
+        })
+
         it('does not allow contributions below minimum cap per purchaser', async () => {
             const sender = buyer4
 
-            const minTokenCap = await saleContract.PURCHASER_MIN_TOKEN_CAP.call()
+            const minTokenCap = await tokenContract.PURCHASER_MIN_TOKEN_CAP.call()
             const rate = await saleContract.rate.call()
             const minWei = minTokenCap.toNumber() / rate.toNumber()
             const sendAmount = minWei - SIGNIFICANT_AMOUNT
@@ -137,7 +157,7 @@ contract('GdprCrowdsale', accounts => {
         it('does allow contributions above minimum purchaser cap', async () => {
             const sender = buyer4
 
-            const minTokenCap = await saleContract.PURCHASER_MIN_TOKEN_CAP.call()
+            const minTokenCap = await tokenContract.PURCHASER_MIN_TOKEN_CAP.call()
             const rate = await saleContract.rate.call()
             const minWei = minTokenCap.toNumber() / rate.toNumber()
             const sendAmount = minWei + SIGNIFICANT_AMOUNT
@@ -161,7 +181,7 @@ contract('GdprCrowdsale', accounts => {
         it('does not allow contributions above $2000 per purchaser on day 1', async () => {
             const sender = buyer4
 
-            const maxTokenCap = await saleContract.PURCHASER_MAX_TOKEN_CAP_DAY1.call()
+            const maxTokenCap = await tokenContract.PURCHASER_MAX_TOKEN_CAP_DAY1.call()
             const rate = await saleContract.rate.call()
             const maxWei = maxTokenCap.toNumber() / rate.toNumber()
             const sendAmount = maxWei
@@ -176,7 +196,7 @@ contract('GdprCrowdsale', accounts => {
 
             timeTravel(86400) // fast forward 1 day
 
-            const maxTokenCap = await saleContract.PURCHASER_MAX_TOKEN_CAP_DAY1.call()
+            const maxTokenCap = await tokenContract.PURCHASER_MAX_TOKEN_CAP_DAY1.call()
             const rate = await saleContract.rate.call()
             const maxWei = maxTokenCap.toNumber() / rate.toNumber()
             const sendAmount = maxWei + SIGNIFICANT_AMOUNT
@@ -194,7 +214,7 @@ contract('GdprCrowdsale', accounts => {
         it('does not allow contributions above $20,000 after day 1', async () => {
             const sender = buyer5
 
-            const maxTokenCap = await saleContract.PURCHASER_MAX_TOKEN_CAP.call()
+            const maxTokenCap = await tokenContract.PURCHASER_MAX_TOKEN_CAP.call()
             const rate = await saleContract.rate.call()
             const maxWei = maxTokenCap.toNumber() / rate.toNumber()
             let sendAmount = maxWei + SIGNIFICANT_AMOUNT * 10
@@ -229,6 +249,11 @@ contract('GdprCrowdsale', accounts => {
 
             await assertThrows(saleContract.setEndTime(now - 999))
             await assertThrows(saleContract.setEndTime(start - 1))
+        })
+
+        it('cannot finalize before the crowdsale end', async () => {
+            // can't finalize before the end date
+            await assertThrows(saleContract.finalize())
         })
 
         it('does not allow contributions after end date', async () => {
@@ -271,9 +296,13 @@ contract('GdprCrowdsale', accounts => {
         })
 
         it('can finalize token sale successfully', async () => {
-            const crowdsaleWallet = await saleContract.SALE_FUNDS_ADDR.call()
+            const crowdsaleWallet = await tokenContract.SALE_FUNDS_ADDR.call()
             const saleBalance = web3.eth.getBalance(saleContract.address)
             const walletBalance1 = web3.eth.getBalance(crowdsaleWallet)
+
+            // fast forwards until crowdsale end time
+            //const untilEnd = end - now
+            //timeTravel(untilEnd)
 
             // finalize token sale
             await saleContract.finalize()
