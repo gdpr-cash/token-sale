@@ -97,7 +97,6 @@ contract('GdprCrowdsale', accounts => {
         it('allows token purchases', async () => {
             const sender = buyer3
 
-            //const saleInitialBalance = await saleContract.balance.call()
             const saleInitialBalance = await web3.eth.getBalance(saleContract.address)
             const rate = await saleContract.rate.call()
 
@@ -114,7 +113,6 @@ contract('GdprCrowdsale', accounts => {
             assert.equal(buyerBalance.toNumber(), sendAmount * rate)
 
             // Check wei added to the vault is correct
-            //const saleNewBalance = await saleContract.balance.call()
             const saleNewBalance = await web3.eth.getBalance(saleContract.address)
             assert.equal(
                 saleNewBalance.toNumber() - saleInitialBalance.toNumber(),
@@ -206,7 +204,7 @@ contract('GdprCrowdsale', accounts => {
                 saleContract.sendTransaction({ from: sender, value: sendAmount, gas: 200000 })
             )
 
-            // check participant can still purchase slightly above the max cap
+            // check participant can still purchase slightly below the max cap
             sendAmount = maxWei - SIGNIFICANT_AMOUNT * 10
             const balance1 = await tokenContract.balanceOf(sender)
             saleContract.sendTransaction({ from: sender, value: sendAmount, gas: 200000 })
