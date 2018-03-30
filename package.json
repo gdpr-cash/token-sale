@@ -32,12 +32,8 @@
   ],
   "author": "GDPR.CASH Core Team",
   "contributors": [
-    "Ivaylo Iliev",
-    ""
+    "ranapat"
   ],
   "license": "MIT",
-  "bugs": {
-    "url": ""
-  },
   "homepage": "https://gdpr.cash"
 }

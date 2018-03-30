@@ -26,7 +26,7 @@ module.exports = {
     keywords,
     license,
     authors: [
-        'Choko Bokov <choko@bokov.com>'
+        'GDPR.CASH Dev Team <info@gdpr.cash> (gdpr.cash)'
     ],
     networks: {
         geth: { ...DEFAULT, gas: 999999 },
