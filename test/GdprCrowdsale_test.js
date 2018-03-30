@@ -49,8 +49,8 @@ contract('GdprCrowdsale', accounts => {
             const name = await tokenContract.name.call()
             const symbol = await tokenContract.symbol.call()
             const decimals = await tokenContract.decimals.call()
-            assert.equal(name, "CHARACTER1")
-            assert.equal(symbol, "CHR1")
+            assert.equal(name, "GDPR Cash")
+            assert.equal(symbol, "GDPR")
             assert.equal(decimals, 18)
         })
 
