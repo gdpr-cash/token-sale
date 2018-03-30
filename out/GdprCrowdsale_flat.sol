@@ -7,8 +7,8 @@ pragma solidity ^0.4.18;
 contract GdprConfig {
 
     // Token settings
-    string public constant TOKEN_NAME = "CHARACTER1";
-    string public constant TOKEN_SYMBOL = "CHR1";
+    string public constant TOKEN_NAME = "GDPR Cash";
+    string public constant TOKEN_SYMBOL = "GDPR";
     uint8 public constant TOKEN_DECIMALS = 18;
 
     // Smallest value of the GDPR
