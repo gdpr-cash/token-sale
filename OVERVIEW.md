@@ -60,3 +60,7 @@ All unsold tokens are "burned", meaning they are destroyed and substracted from 
 # Conclusion
 
 This is a brief summary of the GDPR.CASH token sale functioning at the moment of this writing. At this point, the desired behavior of the aforementioned contracts is subject to change for enhancement of the system until it's ready for official launch. 
+
+# Credits
+
+Thanks the Selfkey team (https://github.com/SelfKeyFoundation/selfkey-token) for some of the ideas in these contracts. 
