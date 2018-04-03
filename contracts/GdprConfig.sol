@@ -22,7 +22,7 @@ contract GdprConfig {
     uint256 public constant PURCHASER_MAX_TOKEN_CAP = 100000 * MIN_TOKEN_UNIT;
 
     // Crowdsale rate GDPR / ETH
-    uint256 public constant INITIAL_RATE = 5000; // 5000 GDPR for 1 ether
+    uint256 public constant INITIAL_RATE = 7600; // 7600 GDPR for 1 ether
 
     // Initial distribution amounts
     uint256 public constant TOTAL_SUPPLY_CAP = 200000000 * MIN_TOKEN_UNIT;
