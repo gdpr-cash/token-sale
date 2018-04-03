@@ -37,9 +37,9 @@ contract('GdprCash', accounts => {
             saleContract = await GdprCrowdsale.new(start, end, tokenContract.address)
             await tokenContract.setCrowdsale(saleContract.address);
             
-            expertsTokens = await saleContract.EXPERTS_POOL_TOKENS.call()
-            marketingTokens = await saleContract.MARKETING_POOL_TOKENS.call()
-            legalTokens = await saleContract.LEGAL_EXPENSES_TOKENS.call()
+            expertsTokens = await tokenContract.EXPERTS_POOL_TOKENS.call()
+            marketingTokens = await tokenContract.MARKETING_POOL_TOKENS.call()
+            legalTokens = await tokenContract.LEGAL_EXPENSES_TOKENS.call()
         })
 
         it('can give approval to the owner for transfers', async () => {
@@ -64,8 +64,8 @@ contract('GdprCash', accounts => {
             await tokenContract.approve(owner, sendAmount, {from: experts})
             const userBalanceBefore = await tokenContract.balanceOf.call(userA)
             await tokenContract.transferFrom(experts, userA, sendAmount, {from: owner})
-            //const userBalanceAfter = await tokenContract.balanceOf.call(userA)
-            //assert.equal(userBalanceAfter.toNumber() - userBalanceBefore.toNumber(), sendAmount)*/
+            const userBalanceAfter = await tokenContract.balanceOf.call(userA)
+            assert.equal(userBalanceAfter.toNumber() - userBalanceBefore.toNumber(), sendAmount)
         })
 
         it('owner cannot transfer more than allowed', async () => {
