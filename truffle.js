@@ -54,7 +54,7 @@ module.exports = {
                 return new HDWalletProvider(wallet.mnemonic, "https://mainnet.infura.io/" + wallet.infuraToken)
             },
             gas: 5000000,
-            gasPrice: 7500000000
+            gasPrice: 22200000000
         },
         coverage: {
             host: "localhost",
