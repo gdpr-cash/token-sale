@@ -13,14 +13,17 @@
   },
   "devDependencies": {
     "solhint": "^1.1.10",
-    "solidity-coverage": "^0.4.11"
+    "solidity-coverage": "^0.4.11",
+    "pretty-quick": "1.4.1",
+    "husky": "0.14.3"
   },
   "scripts": {
     "test": "truffle test",
     "test:cov": "solidity-coverage",
     "lint:sol": "solhint contracts/**/*.sol",
     "deploy:ropsten": "truffle migrate --network ropsten -f 2",
-    "deploy:rinkeby": "truffle migrate --network rinkeby -f 2"
+    "deploy:rinkeby": "truffle migrate --network rinkeby -f 2",
+    "precommit": "pretty-quick --staged"
   },
   "repository": "",
   "keywords": [
